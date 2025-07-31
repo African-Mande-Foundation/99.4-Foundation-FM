@@ -5,8 +5,8 @@ import  Link  from "next/link";
 
 export default function Footer() {
     return(
-        <div className="bg-[#026C79]">
-        <div className=" flex flex-col p-4 pt-6 md:pt-10 lg:px-20 xl:px-45 items-center justify-center bg-[#026C79] w-full border-green-600 border-1">
+        <div className="bg-[#026C79] text-white">
+        <div className=" flex flex-col p-4 pt-6 md:pt-10 lg:px-20 xl:px-45 items-center justify-center bg-[#026C79] w-full border-green-600 border-0">
             <div className="flex flex-col md:flex-row items-start justify-center w-full ">
                 <div className="flex flex-col lg:flex-row items-start justify-center w-full md:w-1/2 border-amber-400 border-0">
                     <div className="flex flex-col gap-4 w-full lg:w-1/2 mb-16">

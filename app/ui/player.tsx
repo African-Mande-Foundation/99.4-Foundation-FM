@@ -175,7 +175,7 @@ export default function Player(){
 
             {/*Progress Bar*/}
            <div className='flex items-center justify-around gap-6 w-full lg:w-1/2 px-6 mt-2'>
-           <span className='w-1/3 md:w-1/5 xl:w-1/6 items-center justify-center flex'>{formatTime(progress)}</span>
+           <span className='w-1/3 md:w-1/5 xl:w-1/6 items-center justify-center flex text-white'>{formatTime(progress)}</span>
 
             <div className='w-full h-2 bg-gray-600 rounded mt-1 relative hover:cursor-pointer ' onClick={handleSeek}>
                 <div
@@ -184,7 +184,7 @@ export default function Player(){
                 />
             </div>
             
-            <span className='w-1/3 md:w-1/5 xl:w-1/6 items-center justify-center flex'>{formatTime(duration)}</span>
+            <span className='w-1/3 md:w-1/5 xl:w-1/6 items-center justify-center flex text-white'>{formatTime(duration)}</span>
 
              <button onClick={toggleMute} className='cursor-pointer  text-white hover:text-[#03FFDD]'>
                     {isMuted? <VolumeX size={20}/> : <Volume2 size={20}/>}

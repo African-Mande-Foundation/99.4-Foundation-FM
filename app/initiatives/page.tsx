@@ -117,7 +117,7 @@ export default function InitiativesPage() {
             to youth leading change, to communities coming together through the power of radio. Every story 
             shared is a step toward awareness, healing, and transformation across South Sudan.
           </p>
-          <button className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-8 rounded-lg transition-colors duration-300">
+          <button className="bg-[#03A0B4] text-white font-bold py-3 px-8 rounded-lg transition-colors duration-300">
             Learn More
           </button>
         </div>
