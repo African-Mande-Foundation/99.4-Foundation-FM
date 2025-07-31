@@ -23,7 +23,7 @@ export default function Navbar() {
     // Handle scroll to update active section
     useEffect(() => {
         const handleScroll = () => {
-            const sections = ['home', 'podcasts', 'collection', 'about', 'programs', 'testimonials', 'contact'];
+            const sections = ['home', 'podcasts', 'collection', 'about', 'programs', 'testimonials',];
             const scrollPosition = window.scrollY + 100;
 
             for (const section of sections) {
@@ -269,6 +269,26 @@ export default function Navbar() {
                 >
                     JOIN LIVE
                 </Link>
+                <Link 
+                    href="/register" 
+                    className={`h-16 px-2 flex items-center transition-all ${
+                        pathname === '/register' 
+                            ? 'bg-[#03A0B4] text-white' 
+                            : 'hover:text-[#03A0B4]'
+                    }`}
+                >
+                    SIGN UP
+                </Link>
+                <Link 
+                    href="/login" 
+                    className={`h-16 px-2 flex items-center transition-all ${
+                        pathname === '/login' 
+                            ? 'bg-[#03A0B4] text-white' 
+                            : 'hover:text-[#03A0B4]'
+                    }`}
+                >
+                    LOGIN
+                </Link>
             </div>
 
             {/* Mobile layout */}
@@ -495,6 +515,31 @@ export default function Navbar() {
                                     }`}
                                 >
                                     JOIN LIVE
+                                </Link>
+                            </div>
+
+                             <div className="border-b border-gray-700 pb-4">
+                                <Link 
+                                    href="/register" 
+                                    className={`block py-2 font-bold text-sm transition-colors ${
+                                        pathname === '/news' 
+                                            ? 'text-[#03A0B4]' 
+                                            : 'text-white hover:text-[#03A0B4]'
+                                    }`}
+                                >
+                                    SIGN UP
+                                </Link>
+                            </div>
+                             <div className="border-b border-gray-700 pb-4">
+                                <Link 
+                                    href="/login" 
+                                    className={`block py-2 font-bold text-sm transition-colors ${
+                                        pathname === '/news' 
+                                            ? 'text-[#03A0B4]' 
+                                            : 'text-white hover:text-[#03A0B4]'
+                                    }`}
+                                >
+                                    LOGIN
                                 </Link>
                             </div>
                         </div>
