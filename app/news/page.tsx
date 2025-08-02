@@ -1,42 +1,79 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+interface NewsItem {
+  id: number;
+  attributes: {
+    title: string;
+    content: string;
+    publishedAt: string;
+  };
+}
+
+
 import Navbar from "../ui/Navbar";
 import Footer from "../ui/Footer";
 
-export default function NewsPage() {
+const NewsPage = () => {
+  const [news, setNews] = useState<NewsItem[]>([]);
+  const [error, setError] = useState('');
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const res = await fetch('/api/news');
+        const data = await res.json();
+        if (res.ok) {
+          setNews(data.data);
+        } else {
+          setError(data.message || 'Failed to load news');
+          router.push('/login');
+        }
+      } catch (err) {
+        setError('An error occurred');
+        router.push('/login');
+      }
+    };
+    fetchNews();
+  }, [router]);
+
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.push('/login');
+  };
+
   return (
-    <div className="min-h-screen bg-[#1b1b1b]">
-      <Navbar />
-      <div className="pt-20 px-4 lg:px-20 xl:px-45">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold text-white mb-8">Latest News</h1>
-          <div className="text-white space-y-8">
-            <div className="bg-gray-800 p-6 rounded-lg">
-              <h3 className="text-xl font-bold mb-3">Community Health Fair Success</h3>
-              <p className="text-gray-300 mb-2">December 15, 2024</p>
-              <p>
-                Our recent health fair brought together over 200 community members for health screenings, 
-                education, and wellness activities. The event was a great success in promoting health awareness.
-              </p>
-            </div>
-            <div className="bg-gray-800 p-6 rounded-lg">
-              <h3 className="text-xl font-bold mb-3">New Youth Program Launched</h3>
-              <p className="text-gray-300 mb-2">December 10, 2024</p>
-              <p>
-                We're excited to announce the launch of our new youth leadership program, designed to 
-                empower young people with skills and confidence for community leadership.
-              </p>
-            </div>
-            <div className="bg-gray-800 p-6 rounded-lg">
-              <h3 className="text-xl font-bold mb-3">Radio Station Expansion</h3>
-              <p className="text-gray-300 mb-2">December 5, 2024</p>
-              <p>
-                Foundation FM is expanding its reach with new equipment and extended broadcasting hours 
-                to better serve our growing community.
-              </p>
-            </div>
-          </div>
-        </div>
+    <>
+    <Navbar />
+    <div className="max-w-4xl mx-auto mt-10">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">News</h1>
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 text-white p-2 rounded"
+        >
+          Logout
+        </button>
       </div>
-      <Footer />
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      <div className="space-y-6">
+        {news.map((item) => (
+          <div key={item.id} className="border p-4 rounded">
+            <h2 className="text-xl font-semibold">{item.attributes.title}</h2>
+            <p className="text-gray-600">{item.attributes.content}</p>
+            <p className="text-sm text-gray-500">
+              Published: {new Date(item.attributes.publishedAt).toLocaleDateString()}
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
+    <Footer />
+    </>
   );
-} 
+};
+
+export default NewsPage;
