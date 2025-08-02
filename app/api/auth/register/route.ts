@@ -4,6 +4,11 @@ import { serialize } from 'cookie';
 export async function POST(req: NextRequest) {
 
   const { username, email, password, subscribeToNewsletter } = await req.json();
+  if (!username || !email || !password) {
+    return NextResponse.json({ message: 'Username, email, and password are required' }, { status: 400 });
+  }
+
+  const photoUrl = "https://images.unsplash.com/photo-1466112928291-0903b80a9466?q=80&w=873&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 
   try {
     const strapiRes = await fetch(`${process.env.STRAPI_URL}/api/auth/local/register`, {
@@ -12,7 +17,7 @@ export async function POST(req: NextRequest) {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username, email, password }),
+      body: JSON.stringify({ username, email, password, photoUrl}),
     });
 
     const data = await strapiRes.json();

@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const strapiRes = await fetch(`${process.env.STRAPI_URL}/api/categories`, {
+    const strapiRes = await fetch(`${process.env.STRAPI_URL}/api/users/me`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -20,12 +20,12 @@ export async function GET(req: NextRequest) {
     const data = await strapiRes.json();
 
     if (!strapiRes.ok) {
-      return NextResponse.json({ message: data.error?.message || 'Failed to fetch categories' }, { status: strapiRes.status });
+      return NextResponse.json({ message: data.error?.message || 'Failed to fetch user' }, { status: strapiRes.status });
     }
 
-    return NextResponse.json(data, { status: 200 });
+    return NextResponse.json(data);
   } catch (error) {
-    console.error('Category fetch error:', error);
+    console.error('User fetch error:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }

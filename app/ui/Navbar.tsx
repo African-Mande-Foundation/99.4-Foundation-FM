@@ -3,9 +3,17 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { ChevronDown, Search, X } from 'lucide-react';
+import { ChevronDown, Search, X, User } from 'lucide-react';
 import LanguageSearchBar from "./searchbar";
 import { Menu } from "lucide-react";
+import Image from 'next/image';
+
+interface UserProfile {
+    id: number;
+    username: string;
+    email: string;
+    photoUrl: string | null;
+}
 
 export default function Navbar() {
     const [activeSection, setActiveSection] = useState('home');
@@ -14,11 +22,40 @@ export default function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [showMobileHomeDropdown, setShowMobileHomeDropdown] = useState(false);
     const [showMobilePagesDropdown, setShowMobilePagesDropdown] = useState(false);
+    const [user, setUser] = useState<UserProfile | null>(null);
+    const [showUserDropdown, setShowUserDropdown] = useState(false);
     const homeDropdownRef = useRef<HTMLDivElement>(null);
     const pagesDropdownRef = useRef<HTMLDivElement>(null);
+    const userDropdownRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
     const searchParams = useSearchParams();
     const pathname = usePathname();
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const res = await fetch('/api/users/me');
+                if (res.ok) {
+                    const userData = await res.json();
+                    setUser(userData);
+                }
+            } catch (error) {
+                console.error('Failed to fetch user', error);
+            }
+        };
+
+        fetchUser();
+    }, []);
+
+    const handleLogout = async () => {
+        try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            setUser(null);
+            router.push('/login');
+        } catch (error) {
+            console.error('Failed to logout', error);
+        }
+    };
 
     // Handle scroll to update active section
     useEffect(() => {
@@ -64,6 +101,9 @@ export default function Navbar() {
             }
             if (pagesDropdownRef.current && !pagesDropdownRef.current.contains(event.target as Node)) {
                 setShowPagesDropdown(false);
+            }
+            if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
+                setShowUserDropdown(false);
             }
         };
 
@@ -269,26 +309,50 @@ export default function Navbar() {
                 >
                     JOIN LIVE
                 </Link>
-                <Link 
-                    href="/register" 
-                    className={`h-16 px-2 flex items-center transition-all ${
-                        pathname === '/register' 
-                            ? 'bg-[#03A0B4] text-white' 
-                            : 'hover:text-[#03A0B4]'
-                    }`}
-                >
-                    SIGN UP
-                </Link>
-                <Link 
-                    href="/login" 
-                    className={`h-16 px-2 flex items-center transition-all ${
-                        pathname === '/login' 
-                            ? 'bg-[#03A0B4] text-white' 
-                            : 'hover:text-[#03A0B4]'
-                    }`}
-                >
-                    LOGIN
-                </Link>
+                {user ? (
+                    <div ref={userDropdownRef} className="relative">
+                        <button onClick={() => setShowUserDropdown(!showUserDropdown)}>
+                            {user.photoUrl ? (
+                                <Image src={user.photoUrl} alt="User profile" width={40} height={40} className="rounded-full" />
+                            ) : (
+                                <User className="w-8 h-8 rounded-full bg-gray-700 p-1" />
+                            )}
+                        </button>
+                        {showUserDropdown && (
+                            <div className="absolute top-full right-0 mt-1 bg-black border border-gray-700 min-w-[150px] py-2 rounded shadow-lg">
+                                <button 
+                                    onClick={handleLogout}
+                                    className="block w-full text-left px-4 py-2 transition-colors hover:bg-gray-800 hover:text-[#03A0B4]"
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <>
+                        <Link 
+                            href="/register" 
+                            className={`h-16 px-2 flex items-center transition-all ${
+                                pathname === '/register' 
+                                    ? 'bg-[#03A0B4] text-white' 
+                                    : 'hover:text-[#03A0B4]'
+                            }`}
+                        >
+                            SIGN UP
+                        </Link>
+                        <Link 
+                            href="/login" 
+                            className={`h-16 px-2 flex items-center transition-all ${
+                                pathname === '/login' 
+                                    ? 'bg-[#03A0B4] text-white' 
+                                    : 'hover:text-[#03A0B4]'
+                            }`}
+                        >
+                            LOGIN
+                        </Link>
+                    </>
+                )}
             </div>
 
             {/* Mobile layout */}
@@ -518,30 +582,43 @@ export default function Navbar() {
                                 </Link>
                             </div>
 
-                             <div className="border-b border-gray-700 pb-4">
-                                <Link 
-                                    href="/register" 
-                                    className={`block py-2 font-bold text-sm transition-colors ${
-                                        pathname === '/news' 
-                                            ? 'text-[#03A0B4]' 
-                                            : 'text-white hover:text-[#03A0B4]'
-                                    }`}
-                                >
-                                    SIGN UP
-                                </Link>
-                            </div>
-                             <div className="border-b border-gray-700 pb-4">
-                                <Link 
-                                    href="/login" 
-                                    className={`block py-2 font-bold text-sm transition-colors ${
-                                        pathname === '/news' 
-                                            ? 'text-[#03A0B4]' 
-                                            : 'text-white hover:text-[#03A0B4]'
-                                    }`}
-                                >
-                                    LOGIN
-                                </Link>
-                            </div>
+                             {user ? (
+                                <div className="border-b border-gray-700 pb-4">
+                                    <button
+                                        onClick={handleLogout}
+                                        className="block w-full text-left py-2 font-bold text-sm transition-colors text-white hover:text-[#03A0B4]"
+                                    >
+                                        LOGOUT
+                                    </button>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="border-b border-gray-700 pb-4">
+                                        <Link
+                                            href="/register"
+                                            className={`block py-2 font-bold text-sm transition-colors ${
+                                                pathname === '/register'
+                                                    ? 'text-[#03A0B4]'
+                                                    : 'text-white hover:text-[#03A0B4]'
+                                            }`}
+                                        >
+                                            SIGN UP
+                                        </Link>
+                                    </div>
+                                    <div className="border-b border-gray-700 pb-4">
+                                        <Link
+                                            href="/login"
+                                            className={`block py-2 font-bold text-sm transition-colors ${
+                                                pathname === '/login'
+                                                    ? 'text-[#03A0B4]'
+                                                    : 'text-white hover:text-[#03A0B4]'
+                                            }`}
+                                        >
+                                            LOGIN
+                                        </Link>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

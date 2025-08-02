@@ -1,16 +1,13 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
+export async function POST(req: NextRequest) {
 
-  const jwt = req.cookies['jwt'];
+  const jwt = req.cookies.get('jwt')?.value;
   if (!jwt) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const { content, articleId, parentId, userId } = req.body;
+  const { content, articleId, parentId, userId } = await req.json();
 
   try {
     const strapiRes = await fetch(`${process.env.STRAPI_URL}/api/comments`, {
@@ -33,12 +30,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const data = await strapiRes.json();
 
     if (!strapiRes.ok) {
-      return res.status(strapiRes.status).json({ message: data.error?.message || 'Failed to post comment' });
+      return NextResponse.json({ message: data.error?.message || 'Failed to post comment' }, { status: strapiRes.status });
     }
 
-    return res.status(200).json(data);
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
     console.error('Comment post error:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }
