@@ -10,7 +10,8 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const strapiRes = await fetch(`${process.env.STRAPI_URL}/api/categories`, {
+    // Assuming Strapi's comments endpoint supports sorting and limiting
+    const strapiRes = await fetch(`${process.env.STRAPI_URL}/api/comments?sort=createdAt:desc&pagination[limit]=5&populate[profile]=true`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -22,12 +23,12 @@ export async function GET(req: NextRequest) {
     const data = await strapiRes.json();
 
     if (!strapiRes.ok) {
-      return NextResponse.json({ message: data.error?.message || 'Failed to fetch categories' }, { status: strapiRes.status });
+      return NextResponse.json({ message: data.error?.message || 'Failed to fetch recent comments' }, { status: strapiRes.status });
     }
 
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    console.error('Category fetch error:', error);
+    console.error('Recent comments fetch error:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }
