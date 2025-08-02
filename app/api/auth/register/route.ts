@@ -1,15 +1,11 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import cookie from 'cookie';
+import { NextRequest, NextResponse } from 'next/server';
+import { serialize } from 'cookie';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
+export async function POST(req: NextRequest) {
 
-  const { username, email, password, subscribeToNewsletter } = req.body;
+  const { username, email, password, subscribeToNewsletter } = await req.json();
 
   try {
-    // Register user with Strapi
     const strapiRes = await fetch(`${process.env.STRAPI_URL}/api/auth/local/register`, {
       method: 'POST',
       headers: {
@@ -22,11 +18,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const data = await strapiRes.json();
 
     if (!strapiRes.ok) {
-      return res.status(strapiRes.status).json({ message: data.error?.message || 'Registration failed' });
+      
+      return NextResponse.json({ message: data.error?.message || 'Registration failed' }, { status: strapiRes.status });
     }
 
-    // Set HTTP-only, secure cookie
-    res.setHeader('Set-Cookie', cookie.serialize('jwt', data.jwt, {
+    
+    const jwt = data.jwt;
+
+    
+    const res = NextResponse.json({ user: data.user }, { status: 200 });
+
+    res.headers.set('Set-Cookie', serialize('jwt', jwt, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
@@ -34,14 +36,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       path: '/',
     }));
 
-    // Handle newsletter signup if selected
+    
     if (subscribeToNewsletter) {
       const newsletterRes = await fetch(`${process.env.STRAPI_URL}/api/newsletter-signups`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${data.jwt}`,
+          'Authorization': `Bearer ${jwt}`,
         },
         body: JSON.stringify({
           data: {
@@ -55,13 +57,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!newsletterRes.ok) {
         const newsletterData = await newsletterRes.json();
         console.error('Newsletter signup failed:', newsletterData.error?.message);
-        // Note: We don't fail the registration if newsletter signup fails
       }
     }
 
-    return res.status(200).json({ user: data.user });
+   
+    return res;
+
   } catch (error) {
     console.error('Registration error:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }
+

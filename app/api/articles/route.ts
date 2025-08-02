@@ -1,10 +1,10 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const jwt = req.cookies['jwt'];
+export async function GET(req: NextRequest) {
+  const jwt = req.cookies.get('jwt')?.value;
 
   if (!jwt) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
   try {
@@ -20,12 +20,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const data = await strapiRes.json();
 
     if (!strapiRes.ok) {
-      return res.status(strapiRes.status).json({ message: data.error?.message || 'Failed to fetch articles' });
+      return NextResponse.json({ message: data.error?.message || 'Failed to fetch articles' }, { status: strapiRes.status });
     }
 
-    return res.status(200).json(data);
+    return NextResponse.json(data);
   } catch (error) {
     console.error('Article fetch error:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }
