@@ -8,14 +8,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation'
 
-import { Article, Comment } from '@/app/lib/types';
+import { ArticleData, Comment } from '@/app/lib/types';
 
 import React from 'react';
 
 export default function ArticlePage() {
   const params = useParams<{ documentId: string }>();
   const { documentId } = params;
-  const [article, setArticle] = useState<Article | null>(null);
+  const [article, setArticle] = useState<ArticleData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [commentContent, setCommentContent] = useState('');
@@ -116,9 +116,9 @@ export default function ArticlePage() {
             >
               Reply
             </button>
-            {comment.replies?.data && comment.replies.data.length > 0 && (
+            {comment.replies && comment.replies.length > 0 && (
               <div className="ml-8 mt-4 border-l-2 border-gray-300 pl-4">
-                {renderComments(comment.replies.data)}
+                {renderComments(comment.replies)}
               </div>
             )}
           </div>
