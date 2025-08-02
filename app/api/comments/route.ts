@@ -1,13 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from "../auth/[...nextauth]/route"
 
 export async function POST(req: NextRequest) {
+  const session = await getServerSession(authOptions);
 
-  const jwt = req.cookies.get('jwt')?.value;
-  if (!jwt) {
+  if (!session || !session.jwt || !session.user?.id) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const { content, articleId, parentId, userId } = await req.json();
+  const { content, articleId, userId, parentId } = await req.json();
+
+  if (!content || !articleId || userId !== session.user.id) {
+    return NextResponse.json({ message: 'Invalid comment data' }, { status: 400 });
+  }
 
   try {
     const strapiRes = await fetch(`${process.env.STRAPI_URL}/api/comments`, {
@@ -15,13 +21,13 @@ export async function POST(req: NextRequest) {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${jwt}`,
+        Authorization: `Bearer ${session.jwt}`,
       },
       body: JSON.stringify({
         data: {
           Content: content,
           article: articleId,
-          user: userId,
+          profile: session.user.id,
           parent: parentId || null,
         },
       }),
@@ -30,7 +36,10 @@ export async function POST(req: NextRequest) {
     const data = await strapiRes.json();
 
     if (!strapiRes.ok) {
-      return NextResponse.json({ message: data.error?.message || 'Failed to post comment' }, { status: strapiRes.status });
+      return NextResponse.json(
+        { message: data.error?.message || 'Failed to post comment' },
+        { status: strapiRes.status }
+      );
     }
 
     return NextResponse.json(data, { status: 200 });

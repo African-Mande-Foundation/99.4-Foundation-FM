@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Navbar from '../ui/Navbar';
 import Footer from '../ui/Footer';
 import Link from 'next/link';
+import { signIn } from "next-auth/react";
 
 export default function RegisterPage() {
     const [username, setUsername] = useState('');
@@ -19,29 +20,45 @@ export default function RegisterPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        setError('');
+        setError("");
 
         if (password !== confirmPassword) {
-            setError('Passwords do not match');
+            setError("Passwords do not match");
             setIsLoading(false);
             return;
         }
 
         try {
-            const res = await fetch('/api/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json'},
+            const res = await fetch("/api/auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, email, password, subscribeToNewsletter }),
             });
 
-            if (res.ok) {
-                router.push('/news');
-            } else {
+            if (!res.ok) {
                 const data = await res.json();
-                setError(data.message || 'Registration failed');
+                setError(data.message || "Registration failed");
+                setIsLoading(false);
+                return;
             }
+
+            
+            const signInRes = await signIn("credentials", {
+                identifier: email,
+                password,
+                redirect: false, 
+            });
+
+            if (signInRes?.error) {
+                setError("Auto-login failed: " + signInRes.error);
+                setIsLoading(false);
+                return;
+            }
+
+            
+            router.push("/");
         } catch (err) {
-            setError('An unexpected error occurred.');
+            setError("An unexpected error occurred.");
         } finally {
             setIsLoading(false);
         }

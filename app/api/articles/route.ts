@@ -1,26 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from "../auth/[...nextauth]/route"
 
 export async function GET(req: NextRequest) {
-  const jwt = req.cookies.get('jwt')?.value;
+  const session = await getServerSession(authOptions);
 
-  if (!jwt) {
+  if (!session || !session.jwt) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
   try {
-    const strapiRes = await fetch(`${process.env.STRAPI_URL}/api/articles?populate[0]=author&populate[1]=category&populate[2]=cover`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${jwt}`,
-      },
-    });
+    const strapiRes = await fetch(
+      `${process.env.STRAPI_URL}/api/articles?populate[0]=author&populate[1]=category&populate[2]=cover`,
+      {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.jwt}`,
+        },
+      }
+    );
 
     const data = await strapiRes.json();
 
     if (!strapiRes.ok) {
-      return NextResponse.json({ message: data.error?.message || 'Failed to fetch articles' }, { status: strapiRes.status });
+      return NextResponse.json(
+        { message: data.error?.message || 'Failed to fetch articles' },
+        { status: strapiRes.status }
+      );
     }
 
     return NextResponse.json(data);

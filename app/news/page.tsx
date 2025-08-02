@@ -2,14 +2,16 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import Navbar from '../ui/Navbar';
 import Footer from '../ui/Footer';
 
 interface Article {
   id: number;
   documentId: string;
-  title: string;          // <-- Directly on the object
-  description: string;    // <-- Directly on the object
+  title: string;
+  description: string;
   slug: string;
   createdAt: string;
   publishedAt: string;
@@ -40,8 +42,9 @@ interface Article {
     width: number;
     height: number;
     url: string;
-  }
+  };
 }
+
 interface Comment {
   id: number;
   documentId: string;
@@ -78,6 +81,7 @@ const NewsPage = () => {
   const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
   const [parentCommentId, setParentCommentId] = useState<string | null>(null);
   const router = useRouter();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -88,23 +92,24 @@ const NewsPage = () => {
           setArticles(data.data);
         } else {
           setError(data.message || 'Failed to load articles');
-          router.push('/login');
         }
       } catch (err) {
-        setError('An error occurred');
-        router.push('/login');
+        setError('An error occurred while loading articles');
       }
     };
     fetchArticles();
-  }, [router]);
+  }, []);
 
   const handleLogout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
-    router.push('/login');
+    await import('next-auth/react').then(({ signOut }) => signOut({ callbackUrl: '/login' }));
   };
 
   const handleCommentSubmit = async (e: React.FormEvent, articleId: string) => {
     e.preventDefault();
+    if (!session) {
+      setError('You must be logged in to post a comment');
+      return;
+    }
     if (!commentContent.trim()) {
       setError('Comment cannot be empty');
       return;
@@ -117,7 +122,7 @@ const NewsPage = () => {
         body: JSON.stringify({
           content: commentContent,
           articleId,
-          userId: 1, // Replace with actual user ID from auth context or API
+          userId: session.user?.id, // Use user ID from session
           parentId: parentCommentId,
         }),
       });
@@ -142,9 +147,31 @@ const NewsPage = () => {
   };
 
   const handleReplyClick = (articleId: string, commentId: string) => {
+    if (!session) {
+      setError('You must be logged in to reply to a comment');
+      return;
+    }
     setSelectedArticleId(articleId);
     setParentCommentId(commentId);
   };
+
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (status === 'unauthenticated') {
+    return (
+      <>
+        <Navbar />
+        <div className="max-w-4xl mx-auto mt-10 text-center">
+          <p className="text-lg">
+            Please <Link href="/login" className="text-blue-500 hover:underline">log in</Link> to view news articles and post comments.
+          </p>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
@@ -202,7 +229,7 @@ const NewsPage = () => {
                   <button
                     type="submit"
                     className="bg-blue-500 text-white p-2 rounded"
-                    disabled={!commentContent.trim()}
+                    disabled={!commentContent.trim() || !session}
                   >
                     {parentCommentId ? 'Post Reply' : 'Post Comment'}
                   </button>

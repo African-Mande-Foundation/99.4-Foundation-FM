@@ -17,38 +17,23 @@ export async function POST(req: NextRequest) {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username, email, password, photoUrl}),
+      body: JSON.stringify({ username, email, password, photoUrl }),
     });
 
     const data = await strapiRes.json();
 
     if (!strapiRes.ok) {
-      
       return NextResponse.json({ message: data.error?.message || 'Registration failed' }, { status: strapiRes.status });
     }
 
-    
-    const jwt = data.jwt;
 
-    
-    const res = NextResponse.json({ user: data.user }, { status: 200 });
-
-    res.headers.set('Set-Cookie', serialize('jwt', jwt, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 7, // 1 week
-      path: '/',
-    }));
-
-    
     if (subscribeToNewsletter) {
       const newsletterRes = await fetch(`${process.env.STRAPI_URL}/api/newsletter-signups`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${jwt}`,
+          'Authorization': `Bearer ${data.jwt}`,
         },
         body: JSON.stringify({
           data: {
@@ -65,8 +50,8 @@ export async function POST(req: NextRequest) {
       }
     }
 
-   
-    return res;
+
+    return NextResponse.json({ user: data.user }, { status: 200 });
 
   } catch (error) {
     console.error('Registration error:', error);
