@@ -88,6 +88,7 @@ export interface Author {
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
+  avatar: Cover;
 }
 
 export interface Category {

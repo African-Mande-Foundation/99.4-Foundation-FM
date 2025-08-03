@@ -1,26 +1,29 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import Navbar from '../ui/Navbar';
 import Footer from '../ui/Footer';
-import Image from 'next/image';
-
-import { Article, Category, RecentComment } from '@/app/lib/types';
+import SearchBar from './components/SearchBar';
+import ArticleGrid from './components/ArticleGrid';
+import Sidebar from './components/Sidebar';
+import LoadingBar from '../ui/LoadingBar';
+import ImageSlider from './components/ImageSlider';
+import { Article, Category, RecentComment, Author } from '@/app/lib/types';
 
 const NewsPage = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [authors, setAuthors] = useState<Author[]>([]);
   const [recentComments, setRecentComments] = useState<RecentComment[]>([]);
   const [error, setError] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const router = useRouter();
+  const [selectedAuthor, setSelectedAuthor] = useState<string | null>(null);
   const { data: session, status } = useSession();
 
-  const fetchArticles = async (query = '', categorySlug: string | null = null) => {
+  const fetchArticles = async (query = '', categorySlug: string | null = null, authorId: string | null = null) => {
     try {
       let url = '/api/articles';
       const params = new URLSearchParams();
@@ -30,6 +33,9 @@ const NewsPage = () => {
       }
       if (categorySlug) {
         params.append('filters[category][slug][$eq]', categorySlug);
+      }
+      if (authorId) {
+        params.append('filters[author][id][$eq]', authorId);
       }
 
       if (params.toString()) {
@@ -62,6 +68,20 @@ const NewsPage = () => {
     }
   };
 
+  const fetchAuthors = async () => {
+    try {
+      const res = await fetch('/api/authors');
+      const data = await res.json();
+      if (res.ok) {
+        setAuthors(data.data);
+      } else {
+        setError(data.message || 'Failed to load authors');
+      }
+    } catch (err) {
+      setError('An error occurred while loading authors');
+    }
+  };
+
   const fetchRecentComments = async () => {
     try {
       const res = await fetch('/api/recent-comments');
@@ -80,25 +100,32 @@ const NewsPage = () => {
     if (status === 'authenticated') {
       fetchArticles();
       fetchCategories();
+      fetchAuthors();
       fetchRecentComments();
     }
   }, [status]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    fetchArticles(searchQuery, selectedCategory);
+  const handleSearch = (query: string) => {
+    fetchArticles(query, selectedCategory, selectedAuthor);
   };
 
-  const handleCategoryClick = (slug: string) => {
+  const handleCategoryClick = (slug: string | null) => {
     setSelectedCategory(slug);
-    fetchArticles(searchQuery, slug);
+    fetchArticles('', slug, selectedAuthor);
+  };
+
+  const handleAuthorClick = (authorId: string | null) => {
+    setSelectedAuthor(authorId);
+    fetchArticles('', selectedCategory, authorId);
   };
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <p className="text-gray-800">Loading...</p>
-      </div>
+      <>
+        <Navbar />
+        <LoadingBar />
+        <Footer />
+      </>
     );
   }
 
@@ -119,122 +146,21 @@ const NewsPage = () => {
   return (
     <div className="min-h-screen bg-white text-gray-800">
       <Navbar />
+      <ImageSlider />
       <div className="pt-20 px-4 lg:px-20 xl:px-45 max-w-7xl mx-auto py-8">
-        <h1 className="text-4xl font-bold mb-8 text-center">Latest News</h1>
-
-        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
-
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Main Content Area */}
           <div className="flex-grow lg:w-3/4">
-            {/* Search Bar */}
-            <form onSubmit={handleSearch} className="mb-6 flex gap-2">
-              <input
-                type="text"
-                placeholder="Search articles..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="flex-grow p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <button
-                type="submit"
-                className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-              >
-                Search
-              </button>
-            </form>
-
-            {/* Categories */}
-            <div className="mb-8 flex flex-wrap gap-2">
-              <button
-                onClick={() => {
-                  setSelectedCategory(null);
-                  fetchArticles(searchQuery, null);
-                }}
-                className={`px-4 py-2 rounded-full text-sm font-medium ${!selectedCategory
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  } transition-colors`}
-              >
-                All
-              </button>
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => handleCategoryClick(category.slug)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium ${selectedCategory === category.slug
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    } transition-colors`}
-                >
-                  {category.name}
-                </button>
-              ))}
-            </div>
-
-            {/* Articles Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {articles.length > 0 ? (
-                articles.map((article) => (
-                  <Link key={article.id} href={`/news/${article.documentId}`}>
-                    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer border border-gray-200">
-                      {article.cover && (
-                        <div className="relative w-full h-48">
-                          <Image
-                            src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${article.cover.url}`}
-                            alt={article.cover.alternativeText || article.title}
-                            fill
-                            style={{ objectFit: 'cover' }}
-                            className="transition-transform duration-300 hover:scale-105"
-                          />
-                        </div>
-                      )}
-                      <div className="p-4">
-                        <h2 className="text-xl font-semibold mb-2 line-clamp-2">{article.title}</h2>
-                        <p className="text-gray-600 text-sm line-clamp-3">{article.description}</p>
-                        <p className="text-xs text-gray-500 mt-2">
-                          {article.author?.name ? `By ${article.author.name}` : ''}
-                          {article.author?.name && article.category?.name ? ' in ' : ''}
-                          {article.category?.name || ''}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                ))
-              ) : (
-                <p className="col-span-full text-center text-gray-600">No articles found.</p>
-              )}
-            </div>
+            <SearchBar onSearch={handleSearch} />
+            <ArticleGrid articles={articles} />
           </div>
-
-          {/* Sidebar for Recent Comments */}
-          <div className="lg:w-1/4 bg-gray-50 p-6 rounded-lg shadow-md border border-gray-200">
-            <h2 className="text-2xl font-bold mb-4">Recent Comments</h2>
-            {recentComments.length > 0 ? (
-              <div className="space-y-4">
-                {recentComments.map((comment) => (
-                  <div key={comment.id} className="border-b border-gray-200 pb-4 last:border-b-0 last:pb-0">
-                    <div className="flex items-center mb-2">
-                      {comment.profile?.photoUrl && (
-                        <Image
-                          src={comment.profile.photoUrl}
-                          alt={comment.profile.name || 'User'}
-                          width={24}
-                          height={24}
-                          className="rounded-full mr-2"
-                        />
-                      )}
-                      <p className="font-semibold text-sm text-gray-800">{comment.profile?.name || 'Anonymous'}</p>
-                    </div>
-                    <p className="text-gray-700 text-sm line-clamp-3">{comment.Content}</p>
-                    <p className="text-xs text-gray-500 mt-1">{new Date(comment.createdAt).toLocaleDateString()}</p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-600 text-sm">No recent comments.</p>
-            )}
-          </div>
+          <Sidebar
+            categories={categories}
+            authors={authors}
+            recentComments={recentComments}
+            selectedCategory={selectedCategory}
+            onCategoryClick={handleCategoryClick}
+            onAuthorClick={handleAuthorClick}
+          />
         </div>
       </div>
       <Footer />
