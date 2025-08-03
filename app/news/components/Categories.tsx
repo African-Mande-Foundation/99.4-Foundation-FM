@@ -1,7 +1,7 @@
-
 'use client';
 
 import { Category } from '@/app/lib/types';
+import Image from 'next/image';
 
 interface CategoriesProps {
   categories: Category[];
@@ -11,30 +11,38 @@ interface CategoriesProps {
 
 const Categories = ({ categories, selectedCategory, onCategoryClick }: CategoriesProps) => {
   return (
-    <div className="p-6 rounded-lg mb-8">
-      <h2 className="text-2xl font-bold mb-4">Posts from Categories</h2>
-      <div className="space-y-2">
-        <button
-          onClick={() => onCategoryClick(null)}
-          className={`block w-full text-left px-4 py-2 rounded-md text-sm font-medium ${!selectedCategory
-            ? 'bg-blue-600 text-white'
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            } transition-colors`}
-        >
-          All
-        </button>
-        {categories.map((category) => (
-          <button
-            key={category.id}
-            onClick={() => onCategoryClick(category.slug)}
-            className={`block w-full text-left px-4 py-2 rounded-md text-sm font-medium ${selectedCategory === category.slug
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              } transition-colors`}
-          >
-            {category.name}
-          </button>
-        ))}
+    <div className="w-full p-6 mb-8 border-t-8 border-b-8 border-black  ">
+      <h2 className="text-3xl font-bold mb-6 text-gray-900  pb-2">Posts from Categories</h2>
+
+      <div className="space-y-6">
+        {categories.map((category) => {
+          const isSelected = selectedCategory === category.slug;
+
+          return (
+            <button
+              key={category.id}
+              onClick={() => onCategoryClick(category.slug)}
+              className={`w-full text-left flex flex-col md:flex-row gap-4 items-start p-4 rounded-lg transition 
+                hover:shadow-lg ${isSelected ? 'bg-green-300' : 'bg-white'}`}
+            >
+              {category.cover && (
+                <div className="relative w-full md:w-28 h-24 flex-shrink-0 rounded overflow-hidden">
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${category.cover.formats.thumbnail.url}`}
+                    alt={category.name}
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-md"
+                  />
+                </div>
+              )}
+              <div className="flex flex-col">
+                <h3 className="text-xl font-bold text-black mb-2">{category.name}</h3>
+                <p className="text-gray-700 text-sm">{category.description}</p>
+              </div>
+            </button>
+          );
+        })}
       </div>
     </div>
   );

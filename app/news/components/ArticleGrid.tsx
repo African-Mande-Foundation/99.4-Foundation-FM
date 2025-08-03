@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -11,28 +10,35 @@ interface ArticleGridProps {
 
 const ArticleGrid = ({ articles }: ArticleGridProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
       {articles.length > 0 ? (
         articles.map((article) => (
-          <Link key={article.id} href={`/news/${article.documentId}`}>
-            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer border border-gray-200">
+          <Link key={article.id} href={`/news/${article.documentId}`} className="group">
+            <div className=" overflow-hidden shadow-sm hover:shadow-lg transition duration-300 border border-gray-200 bg-white">
+              {/* Cover Image */}
               {article.cover && (
-                <div className="relative w-full h-48">
+                <div className="relative w-full h-64">
                   <Image
                     src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${article.cover.url}`}
                     alt={article.cover.alternativeText || article.title}
                     fill
                     style={{ objectFit: 'cover' }}
-                    className="transition-transform duration-300 hover:scale-105"
+                    className="group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
               )}
-              <div className="p-4">
-                <h2 className="text-xl font-semibold mb-2 line-clamp-2">{article.title}</h2>
+
+              {/* Content */}
+              <div className="p-5 space-y-2">
+                <h2 className="text-2xl font-bold text-gray-800 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                  {article.title}
+                </h2>
+
                 <p className="text-gray-600 text-sm line-clamp-3">{article.description}</p>
-                <p className="text-xs text-gray-500 mt-2">
+
+                <p className="text-xs text-gray-400 mt-2">
                   {article.author?.name ? `By ${article.author.name}` : ''}
-                  {article.author?.name && article.category?.name ? ' in ' : ''}
+                  {article.author?.name && article.category?.name ? ' · ' : ''}
                   {article.category?.name || ''}
                 </p>
               </div>

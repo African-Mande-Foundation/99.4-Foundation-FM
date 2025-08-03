@@ -11,29 +11,33 @@ interface AuthorsProps {
 
 const Authors = ({ authors, onAuthorClick }: AuthorsProps) => {
   return (
-    <div className="p-6 rounded-lg mb-8">
-      <h2 className="text-2xl font-bold mb-4">Magazine Editors</h2>
-      <div className="space-y-2">
+    <div className="p-6 mb-8">
+      <h2 className="text-3xl font-bold mb-6 text-gray-900  pb-2">Magazine Editors</h2>
+      <div className="space-y-3">
         {authors.map((author) => (
           <button
             key={author.id}
             onClick={() => onAuthorClick(author.documentId)}
-            className="flex items-center w-full text-left px-4 py-2 rounded-md text-sm font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
+            className="flex items-center w-full text-left px-4 py-3 l text-gray-800 hover:bg-gray-100 transition-colors "
           >
             {author.avatar && (
               <Image
                 src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${author.avatar.formats.thumbnail.url}`}
                 alt={author.name}
-                width={24}
-                height={24}
-                className="rounded-full mr-2"
+                width={36}
+                height={36}
+                className="rounded-full mr-4 border border-gray-300"
               />
             )}
-            {author.name}
+            <div>
+              <p className="font-semibold">{author.name}</p>
+              <p className="text-sm text-gray-500">{author.email}</p>
+            </div>
           </button>
         ))}
       </div>
     </div>
+
   );
 };
 

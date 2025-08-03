@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '../ui/Navbar';
 import Footer from '../ui/Footer';
 import Link from 'next/link';
 import { signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 export default function RegisterPage() {
     const [username, setUsername] = useState('');
@@ -16,6 +17,14 @@ export default function RegisterPage() {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
+    const { data: session, status } = useSession();
+
+
+    useEffect(() => {
+        if (status === 'authenticated') {
+            router.replace('/');
+        }
+    }, [status, router]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -42,11 +51,11 @@ export default function RegisterPage() {
                 return;
             }
 
-            
+
             const signInRes = await signIn("credentials", {
                 identifier: email,
                 password,
-                redirect: false, 
+                redirect: false,
             });
 
             if (signInRes?.error) {
@@ -55,7 +64,7 @@ export default function RegisterPage() {
                 return;
             }
 
-            
+
             router.push("/");
         } catch (err) {
             setError("An unexpected error occurred.");

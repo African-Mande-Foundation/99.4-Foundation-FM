@@ -18,7 +18,7 @@ interface SidebarProps {
 
 const Sidebar = ({ categories, authors, recentComments, selectedCategory, onCategoryClick, onAuthorClick }: SidebarProps) => {
   return (
-    <div className="lg:w-2/4">
+    <div className=" space-y-6">
       <Categories categories={categories} selectedCategory={selectedCategory} onCategoryClick={onCategoryClick} />
       <Authors authors={authors} onAuthorClick={onAuthorClick} />
       <SocialMedia />

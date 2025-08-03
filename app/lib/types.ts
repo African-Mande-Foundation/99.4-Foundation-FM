@@ -99,6 +99,8 @@ export interface Category {
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
+  description: string;
+  cover: Cover;
 }
 
 export interface ArticleData {

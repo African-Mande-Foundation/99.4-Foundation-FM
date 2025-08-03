@@ -30,7 +30,7 @@ body {
 
 .swiper-button-next,
 .swiper-button-prev {
-  color: white;
+  color: #ffffff !important;
   background-color: rgba(0, 0, 0, 0.8);
   padding: 1rem;
   width: 3rem;

@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { authOptions } from "../../auth/[...nextauth]/authOptions"
 
-export async function GET(req: NextRequest, { params }: { params: { documentId: string } }) {
-  const { documentId } = params;
+export async function GET(req: NextRequest) {
+  const url = new URL(req.url);
+  const documentId = url.pathname.split('/').pop(); // Get the last part of the URL
+
   const session = await getServerSession(authOptions);
 
   if (!session || !session.jwt) {
