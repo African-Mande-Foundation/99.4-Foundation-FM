@@ -127,13 +127,13 @@ export default function PhotoGallery() {
           {/* Back Button */}
           <button
             onClick={handleBackToGrid}
-            className="absolute top-8 left-8 z-20 bg-white/10 hover:bg-[#03A0B4] text-white px-6 py-3 transition-all duration-300 backdrop-blur-sm "
+            className="absolute top-8 left-8 z-20 bg-white/40 hover:bg-[#03A0B4] text-white px-6 py-3 transition-all duration-300 backdrop-blur-sm "
           >
-            ← Back to Gallery
+            Back to Gallery
           </button>
 
           {/* Category Title */}
-          <div className="absolute top-8 right-8 z-20 text-white text-2xl font-bold bg-black/20 px-6 py-3 backdrop-blur-sm border border-white/20">
+          <div className="absolute top-8 right-8 z-20 text-white text-2xl font-bold bg-black/40 px-6 py-3 backdrop-blur-md ">
             {categories.find(c => c.id === selectedCategory)?.name}
           </div>
 

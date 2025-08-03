@@ -39,11 +39,11 @@ export default function Home() {
           
 
         </div>
-        <div id="collection" className=" flex flex-col p-4 pt-6 md:pt-10 lg:px-20 xl:px-45 items-center justify-center w-full border-green-600 border-0">
+        <div id="collection" className=" flex flex-col p-4 pt-6 md:pt-10 lg:px-20 xl:px-45 items-center justify-center w-full border-green-600 border-0 bg-[#0d0d0d]">
           <Collection/>
         </div>
         <div id="about" className=" flex flex-col p-4 pt-6 md:pt-10 lg:px-20 xl:px-45 items-center justify-center w-full border-green-600 border-0">
-          <h2 className="text-3xl font-bold text-center mb-8">ABOUT OUR RADIO STATION</h2>
+          <h2 className="text-3xl font-bold text-center mb-8 text-white">ABOUT OUR RADIO STATION</h2>
           <div className="text-justify text-white text-sm lg:text-base flex flex-col items-center justify-center gap-4 mb-8 ">
           <p>
             99.4 Foundation FM is the voice of the community, informing, inspiring, and empowering through the power of sound. As a project of Africano Mande Foundation, our station bridges the gap between information and transformation by delivering programs that reflect the real issues, stories, and hopes of the people we serve.
@@ -64,7 +64,7 @@ export default function Home() {
         </div>
 
         <div id="programs" className=" flex flex-col p-4 pt-6 md:pt-10 lg:px-20 xl:px-45 items-center justify-center bg-[#0d0d0d] w-full border-green-600 border-0">
-           <h2 className="text-3xl font-bold text-center mb-8">OUR PROGRAMS</h2>
+           <h2 className="text-3xl font-bold text-center mb-8 text-white">OUR PROGRAMS</h2>
            <div className="flex flex-col md:flex-row w-full">
            <div className="w-full md:w-1/2 lg:w-1/3">
             <MovingLines/>
@@ -92,7 +92,7 @@ export default function Home() {
             </div>
            </div>
         </div>
-        <div id="testimonials" className=" flex flex-col p-4 pt-6 md:pt-10 lg:px-20 xl:px-45 items-center justify-center  w-full border-green-600 border-0">
+        <div id="testimonials" className=" flex flex-col p-4 pt-6 md:pt-10 lg:px-20 xl:px-45 items-center justify-center  w-full border-green-600 border-0 ">
           <div className="flex flex-col md:flex-row w-full">
             <div className="w-full mb-4 md:w-1/2">
               <Image
@@ -105,12 +105,12 @@ export default function Home() {
             </div>
             <div className="flex flex-col border-0 border-amber-500 w-full md:w-1/2">
               <p className="text-xs mb-4 text-center text-[#828282]">What You Say About Us?</p>
-              <h2 className="text-3xl font-bold text-center">TESTIMONIALS</h2>
+              <h2 className="text-3xl font-bold text-center text-white">TESTIMONIALS</h2>
               <Testimonial/>
             </div>
           </div>
         </div>
-        <div id="contact" className="flex flex-col md:py-10 w-full border-green-600 border-0"
+        <div id="contact" className="flex flex-col md:py-10 w-full text-white border-green-600 border-0"
         style={{
           background:'url(https://firebasestorage.googleapis.com/v0/b/foundation-fm.firebasestorage.app/o/Foundation_FM_Media%2Fpexels-iriser-1707232.jpg?alt=media&token=4a4f9108-ccfc-4abe-bdaf-aff6bd9cda0c)',
           backgroundRepeat:'no-repeat',
