@@ -1,18 +1,22 @@
+import { flattenStrapiResponse } from '@/app/lib/utils';
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from "../auth/[...nextauth]/authOptions"
-import { flattenStrapiResponse } from '@/app/lib/utils';
+import { authOptions } from "../../../auth/[...nextauth]/authOptions";
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest, context: { params: { commentId: string } }) {
   const session = await getServerSession(authOptions);
 
   if (!session || !session.jwt) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
+  const { params } = await context; // 👈 This is the key fix
+  const { commentId } = params;
+
   try {
     const strapiRes = await fetch(
-      `${process.env.STRAPI_URL}/api/articles?populate[0]=author[populate][0]=avatar&populate[1]=category[populate][0]=cover&populate[2]=cover&pagination[page]=1&pagination[pageSize]=4&sort[0]=publishedAt:desc`,
+      `${process.env.STRAPI_URL}/api/comments?filters[parent][id][$eq]=${commentId}&sort=createdAt:asc&populate=user`,
+
       {
         method: 'GET',
         headers: {
@@ -24,19 +28,19 @@ export async function GET(req: NextRequest) {
     );
 
     const data = await strapiRes.json();
-    console.log(data)
+
     if (!strapiRes.ok) {
       return NextResponse.json(
-        { message: data.error?.message || 'Failed to fetch articles' },
+        { message: data.error?.message || 'Failed to fetch replies' },
         { status: strapiRes.status }
       );
     }
 
-    const flattenedData = flattenStrapiResponse(data.data);
-    console.log(flattenedData)
-    return NextResponse.json(flattenedData);
+    const flattenedReplies = flattenStrapiResponse(data.data);
+
+    return NextResponse.json(flattenedReplies);
   } catch (error) {
-    console.error('Article fetch error:', error);
+    console.error('Replies fetch error:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }

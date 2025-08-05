@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { Comment } from '@/app/lib/types';
 
@@ -10,22 +11,43 @@ interface CommentListProps {
 }
 
 const CommentList = ({ comments, onReplyClick }: CommentListProps) => {
+  const [replies, setReplies] = useState<{ [key: string]: Comment[] }>({});
+  const [loadingReplies, setLoadingReplies] = useState<{ [key: string]: boolean }>({});
+
+  const fetchReplies = async (commentId: string) => {
+    setLoadingReplies((prev) => ({ ...prev, [commentId]: true }));
+    try {
+      const res = await fetch(`/api/comments/${commentId}/replies`);
+      const data = await res.json();
+      if (res.ok) {
+        setReplies((prev) => ({ ...prev, [String(commentId)]: data }));
+
+      } else {
+        console.error(data.message || 'Failed to load replies');
+      }
+    } catch (err) {
+      console.error('An error occurred while loading replies');
+    } finally {
+      setLoadingReplies((prev) => ({ ...prev, [commentId]: false }));
+    }
+  };
+
   const renderComments = (comments: Comment[]) => {
     return (
       <div className="space-y-4">
         {comments.map((comment) => (
           <div key={comment.id} className="p-4 rounded-lg">
             <div className="flex items-center mb-2">
-              {comment.profile?.photoUrl && (
+              {comment.user?.photoUrl && (
                 <Image
-                  src={comment.profile.photoUrl}
-                  alt={comment.profile.name || 'User'}
+                  src={comment.user.photoUrl}
+                  alt={comment.user.username || 'User'}
                   width={30}
                   height={30}
                   className="rounded-full mr-2"
                 />
               )}
-              <p className="font-semibold text-gray-800">{comment.profile?.name || 'Anonymous'}</p>
+              <p className="font-semibold text-gray-800">{comment.user?.username || 'Anonymous'}</p>
               <p className="text-sm text-gray-500 ml-2">{new Date(comment.createdAt).toLocaleString()}</p>
             </div>
             <p className="text-gray-700">{comment.Content}</p>
@@ -35,11 +57,22 @@ const CommentList = ({ comments, onReplyClick }: CommentListProps) => {
             >
               Reply
             </button>
-            {comment.replies && comment.replies.length > 0 && (
+            {comment.repliesCount > 0 && !replies[String(comment.id)] && (
+              <button
+                onClick={() => fetchReplies(String(comment.id))}
+                disabled={loadingReplies[String(comment.id)]}
+                className="text-blue-500 text-sm mt-2 hover:underline ml-4"
+              >
+                {loadingReplies[String(comment.id)] ? 'Loading...' : `Show ${comment.repliesCount} replies`}
+              </button>
+            )}
+
+            {replies[String(comment.id)] && (
               <div className="ml-8 mt-4 border-l-2 border-gray-300 pl-4">
-                {renderComments(comment.replies)}
+                {renderComments(replies[String(comment.id)])}
               </div>
             )}
+
           </div>
         ))}
       </div>

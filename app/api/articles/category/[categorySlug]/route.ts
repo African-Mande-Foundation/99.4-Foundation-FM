@@ -1,4 +1,4 @@
-// /api/articles/category/[categorySlug]/route.ts
+import { flattenStrapiResponse } from '@/app/lib/utils';
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from "../../../auth/[...nextauth]/authOptions";
@@ -26,7 +26,7 @@ export async function GET(
 
   try {
     const strapiRes = await fetch(
-      `${process.env.STRAPI_URL}/api/articles?filters[category][slug][$eq]=${categorySlug}&populate[0]=author&populate[1]=cover&populate[2]=category&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+      `${process.env.STRAPI_URL}/api/articles?filters[category][slug][$eq]=${categorySlug}&populate[author][populate][0]=avatar&populate[cover]=true&populate[category]=true&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
       {
         headers: {
           'Accept': 'application/json',
@@ -45,7 +45,9 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(data);
+    const flattenedData = flattenStrapiResponse(data.data);
+
+    return NextResponse.json({ data: flattenedData, meta: data.meta });
   } catch (error) {
     console.error('Error fetching paginated articles:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
