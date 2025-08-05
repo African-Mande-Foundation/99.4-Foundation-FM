@@ -49,6 +49,17 @@ export default function LoginPage() {
             window.location.href = "/";
         }
     };
+    const handleGoogleSignIn = async () => {
+        setIsLoading(true);
+        setError('');
+        try {
+            await signIn('google', { redirect: false, callbackUrl: '/?subscribe=false' });
+        } catch (err) {
+            setError('Google sign-in failed.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
 
     return (
@@ -126,7 +137,9 @@ export default function LoginPage() {
                             </div>
 
                             <div className="mt-6">
-                                <button aria-label="Sign in with Google" className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition ease-in-out duration-150">
+                                <button aria-label="Sign in with Google"
+                                    onClick={handleGoogleSignIn} disabled={isLoading}
+                                    className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition ease-in-out duration-150">
                                     <FontAwesomeIcon icon={faGoogle} className="w-5 h-5" />
                                     <span className="ml-3">Sign in with Google</span>
                                 </button>

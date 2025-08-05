@@ -9,6 +9,9 @@ interface CategoriesProps {
 }
 
 const Categories = ({ categories }: CategoriesProps) => {
+  if(!categories){
+    return  <p className="col-span-full text-center text-gray-600">Loading articles...</p>;
+  }
   return (
     <div className="w-full p-6 mb-8 border-t-8 border-b-8 border-black  ">
       <h2 className="text-3xl font-bold mb-6 text-gray-900  pb-2">Posts from Categories</h2>

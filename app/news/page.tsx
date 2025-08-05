@@ -49,10 +49,35 @@ const NewsPage = () => {
   };
 
   useEffect(() => {
+    const handleGoogleRegistrationPhotoUpdate = async () => {
+      if (status === 'authenticated') {
+        const isGoogleRegistration = localStorage.getItem('googleRegistration');
+        if (isGoogleRegistration) {
+          try {
+            const res = await fetch('/api/users/me', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              }
+            });
+
+            if (!res.ok) throw new Error('Photo update failed');
+
+            localStorage.removeItem('googleRegistration');
+          } catch (err) {
+            console.error('Failed to update photo in Strapi');
+          }
+        }
+      }
+    };
+
     if (status === 'authenticated') {
-      fetchAllData();
+      fetchAllData().then(() => {
+        handleGoogleRegistrationPhotoUpdate();
+      });
     }
-  }, [status]);
+  }, [status, session]);
+
 
   const handleAuthorClick = (authorId: string | null) => {
     setSelectedAuthor(authorId);
@@ -72,11 +97,13 @@ const NewsPage = () => {
     return (
       <div className="min-h-screen bg-white text-gray-800 flex flex-col">
         <Navbar />
+        <ImageSlider />
+        <InfoCards />
+        <PeaceAndSocialIssues />
+        <CommunityHighlights />
+
         <div className="h-[95vh] flex items-center justify-center px-4">
           <div className="text-center space-y-6">
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-              Welcome to Foundation FM News
-            </h1>
             <p className="text-lg md:text-xl text-gray-600">
               Please log in to access the latest stories and updates.
             </p>
@@ -97,20 +124,17 @@ const NewsPage = () => {
             </Link>
           </div>
         </div>
+        <RealVoicesComponent />
+
         <Footer />
       </div>
     );
   }
   return (
     <div className="min-h-screen bg-white text-gray-800">
-
-
-
       <Navbar />
       <ImageSlider />
       <InfoCards />
-
-
       {error && (
         <div className="p-4 bg-red-100 text-red-700 rounded">
           {error}

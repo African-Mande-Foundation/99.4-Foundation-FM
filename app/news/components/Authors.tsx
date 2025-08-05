@@ -10,6 +10,9 @@ interface AuthorsProps {
 }
 
 const Authors = ({ authors, onAuthorClick }: AuthorsProps) => {
+  if (!authors) {
+    return <p className="col-span-full text-center text-gray-600">Loading articles...</p>;
+  }
   return (
     <div className="p-6 mb-8">
       <h2 className="text-3xl font-bold mb-6 text-gray-900  pb-2">Magazine Editors</h2>

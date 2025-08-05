@@ -1,5 +1,6 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import GoogleProvider from 'next-auth/providers/google';
 
 declare module 'next-auth' {
   interface User {
@@ -7,7 +8,8 @@ declare module 'next-auth' {
     id?: string;
     name?: string | null;
     email?: string | null;
-    photoUrl?: string | null;
+    image?: string | null;
+    photoUrl?: string | null; 
   }
   interface Session {
     jwt?: string;
@@ -15,11 +17,10 @@ declare module 'next-auth' {
       id?: string;
       name?: string | null;
       email?: string | null;
-      photoUrl?: string | null;
+      image?: string | null;
     };
   }
 }
-
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -63,15 +64,110 @@ export const authOptions: NextAuthOptions = {
         }
       },
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      profile(profile) {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+        }
+      },
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+          scope: 'openid email profile https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+        }
+      }
+    }),
   ],
   callbacks: {
+    async signIn({ user, account, profile, trigger }: { user: any; account: any; profile?: any; trigger?: string }) {
+    
+      if (account?.provider === 'google' && profile?.email) {
+        try {
+          // Extract subscribeToNewsletter from callbackUrl
+          let subscribeToNewsletter = false;
+          if (trigger === 'signIn') {
+            const callbackUrl = new URL(account.callbackUrl || `${process.env.NEXTAUTH_URL}/`);
+            subscribeToNewsletter = callbackUrl.searchParams.get('subscribe') === 'true';
+          }
+
+          // Check if user exists in Strapi using findByEmail API
+          const checkUserRes = await fetch(`${process.env.STRAPI_URL}/api/check-user`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: profile.email }),
+          });
+
+          const checkUserData = await checkUserRes.json();
+
+          if (checkUserData.exists) {
+            // User exists, try to log in with Google provider
+            const strapiRes = await fetch(
+              `${process.env.STRAPI_URL}/api/auth/google/callback?access_token=${account.access_token}`,
+              {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' },
+              }
+            );
+
+            const data = await strapiRes.json();
+
+            if (strapiRes.ok && data.jwt) {
+              // Successful login
+              user.id = data.user.id.toString();
+              user.name = data.user.username || profile.name;
+              user.email = data.user.email || profile.email;
+              user.image = profile.picture || data.user.photoUrl
+              user.jwt = data.jwt;
+              return true;
+
+            } else {
+              // Google provider login failed, but user exists
+              console.error('Google login failed for existing user:', data);
+              return false;
+            }
+          } else {
+            // User doesn't exist, register with Google provider
+            const registerRes = await fetch(`${process.env.STRAPI_URL}/api/auth/google/callback?access_token=${account.access_token}`, {
+              method: 'GET',
+              headers: { 'Accept': 'application/json' },
+            });
+
+            const registerData = await registerRes.json();
+
+            if (!registerRes.ok) {
+              console.error('Strapi Google registration error:', registerData);
+              return `/login?error=RegistrationFailed&message=${encodeURIComponent(registerData.error?.message || 'Registration failed')}`;
+            }
+
+            user.id = registerData.user.id.toString();
+            user.name = registerData.user.username || profile.name;
+            user.email = registerData.user.email || profile.email;
+            user.image = profile.picture || registerData.user.photoUrl
+            user.jwt = registerData.jwt;
+
+            return true;
+          }
+        } catch (error) {
+          console.error('Google sign-in error:', error);
+          return false;
+        }
+      }
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.jwt = user.jwt;
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
-        token.photoUrl = user.photoUrl;
+        token.image = user.image || user.photoUrl || null;
       }
       return token;
     },
@@ -82,7 +178,7 @@ export const authOptions: NextAuthOptions = {
           id: token.id as string,
           name: token.name || null,
           email: token.email || null,
-          photoUrl: typeof token.photoUrl === 'string' ? token.photoUrl : null,
+          image: typeof token.image === 'string' ? token.image : null,
         };
       }
       return session;

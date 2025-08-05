@@ -279,47 +279,35 @@ export default function Navbar() {
                     JOIN LIVE
                 </Link>
                 {status === "authenticated" && session.user ? (
-                    <div ref={userDropdownRef} className="relative">
-                        <button onClick={() => setShowUserDropdown(!showUserDropdown)}>
-                            {session.user.photoUrl ? (
-                                <img
-                                    src={session.user.photoUrl || "https://images.unsplash.com/photo-1508138221679-760a23a2285b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cmFuZG9tfGVufDB8fDB8fHww"}
-                                    alt="User profile"
-                                    width={40}
-                                    height={40}
-                                    className="rounded-full"
-                                />
-                            ) : (
-                                <User className="w-8 h-8 rounded-full bg-gray-700 p-1" />
+                    <>
+                        <div ref={userDropdownRef} className="relative">
+                            <button onClick={() => setShowUserDropdown(!showUserDropdown)}>
+                                {session.user.image ? (
+                                    <Image
+                                        src={session.user.image}
+                                        alt="User profile"
+                                        width={30}
+                                        height={30}
+                                        className="rounded-full object-cover"
+                                    />
+                                ) : (
+                                    <User className="w-8 h-8 rounded-full bg-gray-700 p-1" />
+                                )}
+                            </button>
+                            {showUserDropdown && (
+                                <div className="absolute top-full right-0 mt-1 bg-black border border-gray-700 min-w-[150px] py-2 rounded shadow-lg">
+                                    <button
+                                        onClick={handleLogout}
+                                        className="block w-full text-left px-4 py-2 transition-colors hover:bg-gray-800 hover:text-[#03A0B4]"
+                                    >
+                                        Logout
+                                    </button>
+                                </div>
                             )}
-                        </button>
-                        {showUserDropdown && (
-                            <div className="absolute top-full right-0 mt-1 bg-black border border-gray-700 min-w-[150px] py-2 rounded shadow-lg">
-                                <button
-                                    onClick={handleLogout}
-                                    className="block w-full text-left px-4 py-2 transition-colors hover:bg-gray-800 hover:text-[#03A0B4]"
-                                >
-                                    Logout
-                                </button>
-                            </div>
-                        )}
-                    </div>
+                        </div>
+                    </>
                 ) : (
                     <>
-                        <Link
-                            href="/register"
-                            className={`h-16 px-2 flex items-center transition-all ${pathname === "/register" ? "bg-[#03A0B4] text-white" : "hover:text-[#03A0B4]"
-                                }`}
-                        >
-                            SIGN UP
-                        </Link>
-                        <Link
-                            href="/login"
-                            className={`h-16 px-2 flex items-center transition-all ${pathname === "/login" ? "bg-[#03A0B4] text-white" : "hover:text-[#03A0B4]"
-                                }`}
-                        >
-                            LOGIN
-                        </Link>
                     </>
                 )}
             </div>

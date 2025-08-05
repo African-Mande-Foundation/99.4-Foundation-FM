@@ -5,10 +5,11 @@ import { useRouter } from 'next/navigation';
 import Navbar from '../ui/Navbar';
 import Footer from '../ui/Footer';
 import Link from 'next/link';
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import LoadingBar from '../ui/LoadingBar';
 
 export default function RegisterPage() {
     const [username, setUsername] = useState('');
@@ -16,6 +17,7 @@ export default function RegisterPage() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [subscribeToNewsletter, setSubscribeToNewsletter] = useState(false);
+    const [newsletterLoading, setNewsLetterLoading] = useState(false)
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
@@ -74,11 +76,72 @@ export default function RegisterPage() {
             setIsLoading(false);
         }
     };
+    const handleGoogleSignIn = async () => {
+        setIsLoading(true);
+        setError('');
+        try {
+
+            localStorage.setItem('subscribeToNewsletter', JSON.stringify(subscribeToNewsletter));
+            localStorage.setItem('googleRegistration', 'true');
+
+            const signInRes = await signIn('google', { redirect: false });
+            if (signInRes?.error) {
+                setError('Google sign-in failed.');
+                setIsLoading(false);
+                return;
+            }
+        } catch (err) {
+            setError('Google sign-in failed.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        const checkAndSubscribe = async () => {
+            if (status === 'authenticated') {
+                const shouldSubscribe = JSON.parse(localStorage.getItem('subscribeToNewsletter') || 'false');
+
+                if (shouldSubscribe) {
+                    setNewsLetterLoading(true);
+                    try {
+                        await fetch('/api/subscribe-newsletter', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        });
+                    } catch (err) {
+                        console.error('Newsletter subscription failed.');
+                    } finally {
+                        setNewsLetterLoading(false);
+                        localStorage.removeItem('subscribeToNewsletter');
+                        router.replace('/');
+                    }
+                } else {
+                    router.replace('/');
+                }
+            }
+        };
+
+        checkAndSubscribe();
+    }, [status, session, router]);
+
+    if (newsletterLoading) {
+        return (
+            <>
+                <Navbar />
+                <LoadingBar />
+                <h5>Redirecting</h5>
+                <Footer />
+            </>
+        )
+    }
 
     return (
         <>
             <Navbar />
-            <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 ">
+            <div className="min-h-screen bg-gray-100 flex flex-col justify-center">
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
                     <h2 className="text-center text-3xl font-extrabold text-gray-900">
                         Create your account
@@ -184,7 +247,9 @@ export default function RegisterPage() {
                             </div>
 
                             <div className="mt-6">
-                                <button aria-label="Sign in with Google" className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition ease-in-out duration-150">
+                                <button aria-label="Sign in with Google"
+                                    onClick={handleGoogleSignIn} disabled={isLoading}
+                                    className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition ease-in-out duration-150">
                                     <FontAwesomeIcon icon={faGoogle} className="w-5 h-5 text-gray-600" />
                                     <span className="ml-3">Sign up with Google</span>
                                 </button>
