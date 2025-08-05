@@ -88,7 +88,7 @@ export default function ArticlePage() {
       <Navbar />
       <div className="pt-20 px-4 lg:px-20 xl:px-45 max-w-6xl mx-auto py-8">
         <button onClick={() => router.back()} className="mb-4 text-blue-500 hover:underline">
-          &larr; Back to News
+          &larr; Back
         </button>
         <ArticleHeader article={article} />
         <ArticleBody article={article} />

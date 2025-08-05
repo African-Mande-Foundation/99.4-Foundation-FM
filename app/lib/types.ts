@@ -125,6 +125,6 @@ export interface ApiResponse {
   meta: {};
 }
 
-// Re-exporting for news/page.tsx
+
 export type Article = ArticleData;
 export type RecentComment = Comment;
