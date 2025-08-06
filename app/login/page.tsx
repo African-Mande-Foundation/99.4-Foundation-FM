@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Navbar from '../ui/Navbar';
 import Footer from '../ui/Footer';
 import Link from 'next/link';
@@ -17,12 +17,18 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
     const { data: session, status } = useSession();
+    const searchParams = useSearchParams()
+
+    const rawCallbackUrl = searchParams.get('callbackUrl');
+    const callbackUrl = rawCallbackUrl && !rawCallbackUrl.includes('/register') ? rawCallbackUrl : '/';
+
 
     useEffect(() => {
         if (status === 'authenticated') {
-            router.replace('/');
+            setIsLoading(true)
+            router.replace(callbackUrl);
         }
-    }, [status, router]);
+    }, [status, router, callbackUrl]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -52,7 +58,7 @@ export default function LoginPage() {
         setIsLoading(true);
         setError('');
         try {
-            await signIn('google', { redirect: false, callbackUrl: '/?subscribe=false' });
+            await signIn('google', { redirect: false });
         } catch (err) {
             setIsLoading(false);
             setError('Google sign-in failed.');
@@ -105,7 +111,7 @@ export default function LoginPage() {
                             </div>
                             <div className="flex items-center justify-end">
                                 <div className="text-sm">
-                                    <Link href="/forgot-password" className="font-medium text-cyan-600 hover:text-cyan-500">
+                                    <Link href="forgot-password" className="font-medium text-cyan-600 hover:text-cyan-500">
                                         Forgot your password?
                                     </Link>
                                 </div>

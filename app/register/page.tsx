@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Navbar from '../ui/Navbar';
 import Footer from '../ui/Footer';
 import Link from 'next/link';
@@ -10,6 +10,7 @@ import { useSession } from "next-auth/react";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoadingBar from '../ui/LoadingBar';
+import { callbackify } from 'util';
 
 export default function RegisterPage() {
     const [username, setUsername] = useState('');
@@ -23,12 +24,17 @@ export default function RegisterPage() {
     const router = useRouter();
     const { data: session, status } = useSession();
 
+    const searchParams = useSearchParams()
+
+    const rawCallbackUrl = searchParams.get('callbackUrl');
+    const callbackUrl = rawCallbackUrl && !rawCallbackUrl.includes('/login') ? rawCallbackUrl : '/';
 
     useEffect(() => {
         if (status === 'authenticated') {
-            router.replace('/');
+            setIsLoading(true)
+            router.replace(callbackUrl);
         }
-    }, [status, router]);
+    }, [status, router , callbackUrl]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

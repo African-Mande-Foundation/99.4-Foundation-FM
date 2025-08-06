@@ -28,9 +28,9 @@ const Categories = ({ categories }: CategoriesProps) => {
                   <Image
                     src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${category.cover.formats.thumbnail.url}`}
                     alt={category.name}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-md"
+                    fill
+                    className="rounded-md object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                 </div>
               )}

@@ -112,7 +112,7 @@ const NewsPage = () => {
               Please log in to access the latest stories and updates.
             </p>
             <Link
-              href="/login"
+              href="/login?callbackUrl=/news"
               className="inline-block px-6 py-3 border border-black rounded-full text-sm md:text-base font-medium hover:bg-black hover:text-white transition"
             >
               Log In
@@ -121,7 +121,7 @@ const NewsPage = () => {
               New here? Create an account to stay updated.
             </p>
             <Link
-              href="/register"
+              href="/register?callbackUrl=/news"
               className="inline-block px-6 py-3 border border-black rounded-full text-sm md:text-base font-medium hover:bg-black hover:text-white transition"
             >
               Register

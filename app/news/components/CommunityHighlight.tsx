@@ -10,7 +10,7 @@ const CommunityHighlights: React.FC = () => {
                 fill
                 className="object-cover"
                 priority
-                sizes="100vw"
+                sizes="55vw"
             />
 
             <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center text-center text-white p-6">

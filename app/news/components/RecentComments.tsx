@@ -41,17 +41,17 @@ const RecentComments = ({ recentComments }: RecentCommentsProps) => {
                   />
                 )}
                 <p className="text-xs text-gray-500 font-medium">
-                {comment.user?.username || 'Anonymous'}
+                  {comment.user?.username || 'Anonymous'}
 
-              </p>
+                </p>
+              </div>
             </div>
-            </div>
-      ))}
-    </div>
-  ) : (
-    <p className="text-gray-600 text-sm">No recent comments.</p>
-  )
-}
+          ))}
+        </div>
+      ) : (
+        <p className="text-gray-600 text-sm">No recent comments.</p>
+      )
+      }
     </div >
   );
 };
