@@ -11,24 +11,27 @@ const LatestPosts: React.FC = () => {
                 <p className="text-sm text-gray-600">From our blog</p>
             </div>
 
-            <div className="flex gap-4 mb-10">
-                <div className="relative w-1/2 h-60">
+            <div className="flex flex-col md:flex-row gap-4 mb-10">
+                <div className="relative w-full md:w-1/2 aspect-[3/2]">
                     <Image
                         src="https://firebasestorage.googleapis.com/v0/b/foundation-fm.firebasestorage.app/o/Foundation_FM_Media%2Fpexels-olly-771175.jpg?alt=media&token=658ff218-0a07-45a3-8f05-791126a1c240"
                         alt="Blog Image 1"
                         fill
                         className="object-cover rounded"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                 </div>
-                <div className="relative w-1/2 h-60">
+                <div className="relative w-full md:w-1/2 aspect-[3/2]">
                     <Image
                         src="https://firebasestorage.googleapis.com/v0/b/foundation-fm.firebasestorage.app/o/Foundation_FM_Media%2Fpexels-olly-3800507.jpg?alt=media&token=b565164d-623e-4059-9495-6eaae9affefa"
                         alt="Blog Image 2"
                         fill
                         className="object-cover rounded"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                 </div>
             </div>
+
 
             <div className="text-gray-800 space-y-6">
                 <p className="border-b border-black pb-6">

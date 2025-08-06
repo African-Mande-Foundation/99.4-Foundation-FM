@@ -30,34 +30,29 @@ const RecentComments = ({ recentComments }: RecentCommentsProps) => {
 
                 <p>{comment.Content}</p>
               </div>
-
-
-
               <div className="flex items-center space-x-3">
-
                 {comment.user?.photoUrl && (
                   <Image
                     src={comment.user.photoUrl}
                     alt={comment.user.username || 'User'}
-                    width={40}
-                    height={40}
-
+                    width={30}
+                    height={30}
+                    className="rounded-full object-cover"
                   />
                 )}
-
-
                 <p className="text-xs text-gray-500 font-medium">
-                  {comment.user?.username || 'Anonymous'}
+                {comment.user?.username || 'Anonymous'}
 
-                </p>
-              </div>
+              </p>
             </div>
-          ))}
-        </div>
-      ) : (
-        <p className="text-gray-600 text-sm">No recent comments.</p>
-      )}
+            </div>
+      ))}
     </div>
+  ) : (
+    <p className="text-gray-600 text-sm">No recent comments.</p>
+  )
+}
+    </div >
   );
 };
 

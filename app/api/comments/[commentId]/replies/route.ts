@@ -10,7 +10,7 @@ export async function GET(req: NextRequest, context: { params: { commentId: stri
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const { params } = await context; // 👈 This is the key fix
+  const { params } = await context;
   const { commentId } = params;
 
   try {

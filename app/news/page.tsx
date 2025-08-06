@@ -102,8 +102,12 @@ const NewsPage = () => {
         <PeaceAndSocialIssues />
         <CommunityHighlights />
 
-        <div className="h-[95vh] flex items-center justify-center px-4">
-          <div className="text-center space-y-6">
+
+
+        <div className="h-[95vh]  flex items-center justify-center px-4">
+
+          <div className="text-center space-y-6 max-w-">
+
             <p className="text-lg md:text-xl text-gray-600">
               Please log in to access the latest stories and updates.
             </p>
@@ -113,7 +117,7 @@ const NewsPage = () => {
             >
               Log In
             </Link>
-            <p className="text-lg md:text-xl text-gray-600">
+            <p className="mt-5 text-lg md:text-xl text-gray-600">
               New here? Create an account to stay updated.
             </p>
             <Link

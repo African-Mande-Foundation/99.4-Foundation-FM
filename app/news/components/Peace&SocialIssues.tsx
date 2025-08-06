@@ -8,7 +8,7 @@ const PeaceAndSocialIssues = () => {
             <div className="max-w-6xl mx-auto">
                 {/* Section Heading */}
                 <div className="mb-8 flex gap-4 items-center">
-                    <div className="bg-black text-white px-4 py-2 rounded-md">
+                    <div className="text-white px-4 py-2 rounded-md">
                         <h2 className="text-2xl font-bold m-0">Peace & Social Issues</h2>
                     </div>
                     <p className="text-gray-700">
@@ -26,8 +26,10 @@ const PeaceAndSocialIssues = () => {
                                 src="https://firebasestorage.googleapis.com/v0/b/foundation-fm.firebasestorage.app/o/Foundation_FM_Media%2Fimages.jpeg?alt=media&token=4bef070c-596f-4e03-86c7-f494156b6403"
                                 alt="Mr. Sami Charles Mande"
                                 fill
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 className="object-cover rounded-md"
                             />
+
                         </div>
                         <h3 className="font-semibold">Mr. Sami Charles Mande</h3>
                         <p className="italic text-sm mb-2">Executive Director, AMF</p>
@@ -43,6 +45,7 @@ const PeaceAndSocialIssues = () => {
                                 src="https://firebasestorage.googleapis.com/v0/b/foundation-fm.firebasestorage.app/o/Foundation_FM_Media%2Fimages.jpeg?alt=media&token=4bef070c-596f-4e03-86c7-f494156b6403"
                                 alt="Women & Gender Empowerment"
                                 fill
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 className="object-cover rounded-md"
                             />
                         </div>

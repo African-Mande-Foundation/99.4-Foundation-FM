@@ -31,9 +31,8 @@ export default function LoginPage() {
         try {
             await handleLogin(email, password);
         } catch (err) {
-            setError('Login failed');
-        } finally {
             setIsLoading(false);
+            setError('Login failed');
         }
     }
 
@@ -55,9 +54,8 @@ export default function LoginPage() {
         try {
             await signIn('google', { redirect: false, callbackUrl: '/?subscribe=false' });
         } catch (err) {
-            setError('Google sign-in failed.');
-        } finally {
             setIsLoading(false);
+            setError('Google sign-in failed.');
         }
     };
 
@@ -107,7 +105,7 @@ export default function LoginPage() {
                             </div>
                             <div className="flex items-center justify-end">
                                 <div className="text-sm">
-                                    <Link href="#" className="font-medium text-cyan-600 hover:text-cyan-500">
+                                    <Link href="/forgot-password" className="font-medium text-cyan-600 hover:text-cyan-500">
                                         Forgot your password?
                                     </Link>
                                 </div>

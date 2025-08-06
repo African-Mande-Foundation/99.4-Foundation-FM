@@ -71,9 +71,8 @@ export default function RegisterPage() {
 
             router.push("/");
         } catch (err) {
-            setError("An unexpected error occurred.");
-        } finally {
             setIsLoading(false);
+            setError("An unexpected error occurred.");
         }
     };
     const handleGoogleSignIn = async () => {
@@ -91,9 +90,8 @@ export default function RegisterPage() {
                 return;
             }
         } catch (err) {
-            setError('Google sign-in failed.');
-        } finally {
             setIsLoading(false);
+            setError('Google sign-in failed.');
         }
     };
 
@@ -112,9 +110,9 @@ export default function RegisterPage() {
                             },
                         });
                     } catch (err) {
+                        setNewsLetterLoading(false);
                         console.error('Newsletter subscription failed.');
                     } finally {
-                        setNewsLetterLoading(false);
                         localStorage.removeItem('subscribeToNewsletter');
                         router.replace('/');
                     }

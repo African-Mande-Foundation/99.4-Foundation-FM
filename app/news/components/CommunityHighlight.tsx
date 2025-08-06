@@ -1,35 +1,25 @@
 import React from 'react';
+import Image from 'next/image';
 
 const CommunityHighlights: React.FC = () => {
     return (
-        <div style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
-            <img
+        <div className="relative w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden rounded-md">
+            <Image
                 src="https://firebasestorage.googleapis.com/v0/b/foundation-fm.firebasestorage.app/o/Foundation_FM_Media%2Fpexels-olly-3768709.jpg?alt=media&token=c23fa750-b11a-4057-abac-e3bb2208c3f6"
                 alt="Community Highlights"
-                style={{ width: '100%', height: 'auto', display: 'block' }}
+                fill
+                className="object-cover"
+                priority
+                sizes="100vw"
             />
 
-            <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                color: 'white',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                padding: '20px',
-                textAlign: 'center',
-            }}>
-                <h1 style={{ fontSize: '2em', marginBottom: '10px' }}>
+            <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center text-center text-white p-6">
+                <h1 className="text-xl sm:text-2xl md:text-4xl font-bold mb-4 leading-tight drop-shadow-md">
                     LATEST UPDATES, STORIES, AND COMMUNITY HIGHLIGHTS
                 </h1>
-                <p style={{ fontSize: '1em' }}>
-                    Stay Connected with The Latest Updates, Stories, And Community Highlights From Across
-                    The Globe. Timely, Relevant, And Impactful Information That Matters To You.
+                <p className="text-sm sm:text-base md:text-lg max-w-3xl drop-shadow-md">
+                    Stay connected with the latest updates, stories, and community highlights from across the globe.
+                    Timely, relevant, and impactful information that matters to you.
                 </p>
             </div>
         </div>
