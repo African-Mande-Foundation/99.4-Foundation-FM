@@ -1,13 +1,15 @@
-export interface Profile {
+export interface User {
   id: number;
   documentId: string;
-  name: string;
+  username: string;
   email: string;
-  uid: string;
-  photoUrl: string;
+  provider: string;
+  confirmed: boolean;
+  blocked: boolean;
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
+  photoUrl: string | null;
 }
 
 export interface Reaction {
@@ -36,8 +38,9 @@ export interface Comment {
   likes: Reaction | null;
   dislikes: Reaction | null;
   replies: Comment[];
-  profile: Profile;
+  user: User;
   parent: ParentComment | null;
+  repliesCount: number;
 }
 
 export interface ImageFormat {

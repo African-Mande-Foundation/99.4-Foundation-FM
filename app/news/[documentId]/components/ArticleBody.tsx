@@ -11,7 +11,6 @@ const ArticleBody = ({ article }: ArticleBodyProps) => {
   return (
     <div className="prose max-w-none mb-8">
       <p>{article.description}</p>
-
     </div>
   );
 };

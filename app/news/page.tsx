@@ -102,22 +102,26 @@ const NewsPage = () => {
         <PeaceAndSocialIssues />
         <CommunityHighlights />
 
-        <div className="h-[95vh] flex items-center justify-center px-4">
-          <div className="text-center space-y-6">
+
+
+        <div className="h-[95vh]  flex items-center justify-center px-4">
+
+          <div className="text-center space-y-6 max-w-">
+
             <p className="text-lg md:text-xl text-gray-600">
               Please log in to access the latest stories and updates.
             </p>
             <Link
-              href="/login"
+              href="/login?callbackUrl=/news"
               className="inline-block px-6 py-3 border border-black rounded-full text-sm md:text-base font-medium hover:bg-black hover:text-white transition"
             >
               Log In
             </Link>
-            <p className="text-lg md:text-xl text-gray-600">
+            <p className="mt-5 text-lg md:text-xl text-gray-600">
               New here? Create an account to stay updated.
             </p>
             <Link
-              href="/register"
+              href="/register?callbackUrl=/news"
               className="inline-block px-6 py-3 border border-black rounded-full text-sm md:text-base font-medium hover:bg-black hover:text-white transition"
             >
               Register

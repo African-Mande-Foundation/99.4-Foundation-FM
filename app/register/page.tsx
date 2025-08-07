@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Navbar from '../ui/Navbar';
 import Footer from '../ui/Footer';
 import Link from 'next/link';
@@ -10,6 +10,7 @@ import { useSession } from "next-auth/react";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoadingBar from '../ui/LoadingBar';
+import { callbackify } from 'util';
 
 export default function RegisterPage() {
     const [username, setUsername] = useState('');
@@ -23,12 +24,17 @@ export default function RegisterPage() {
     const router = useRouter();
     const { data: session, status } = useSession();
 
+    const searchParams = useSearchParams()
+
+    const rawCallbackUrl = searchParams.get('callbackUrl');
+    const callbackUrl = rawCallbackUrl && !rawCallbackUrl.includes('/login') ? rawCallbackUrl : '/';
 
     useEffect(() => {
         if (status === 'authenticated') {
-            router.replace('/');
+            setIsLoading(true)
+            router.replace(callbackUrl);
         }
-    }, [status, router]);
+    }, [status, router , callbackUrl]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -71,9 +77,8 @@ export default function RegisterPage() {
 
             router.push("/");
         } catch (err) {
-            setError("An unexpected error occurred.");
-        } finally {
             setIsLoading(false);
+            setError("An unexpected error occurred.");
         }
     };
     const handleGoogleSignIn = async () => {
@@ -91,9 +96,8 @@ export default function RegisterPage() {
                 return;
             }
         } catch (err) {
-            setError('Google sign-in failed.');
-        } finally {
             setIsLoading(false);
+            setError('Google sign-in failed.');
         }
     };
 
@@ -112,9 +116,9 @@ export default function RegisterPage() {
                             },
                         });
                     } catch (err) {
+                        setNewsLetterLoading(false);
                         console.error('Newsletter subscription failed.');
                     } finally {
-                        setNewsLetterLoading(false);
                         localStorage.removeItem('subscribeToNewsletter');
                         router.replace('/');
                     }
@@ -141,7 +145,7 @@ export default function RegisterPage() {
     return (
         <>
             <Navbar />
-            <div className="min-h-screen bg-gray-100 flex flex-col justify-center">
+            <div className=" bg-gray-100 flex flex-col justify-center">
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
                     <h2 className="text-center text-3xl font-extrabold text-gray-900">
                         Create your account

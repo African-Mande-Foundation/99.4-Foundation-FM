@@ -1,3 +1,4 @@
+import { flattenStrapiResponse } from '@/app/lib/utils';
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from "../../auth/[...nextauth]/authOptions"
@@ -13,32 +14,58 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const strapiRes = await fetch(
-      `${process.env.STRAPI_URL}/api/articles?filters[documentId][$eq]=${documentId}&populate[comments][populate][0]=replies&populate[comments][populate][1]=profile&populate[comments][populate][2]=parent&populate[comments][populate][3]=replies.profile&populate[cover]=true&populate[author]=true&populate[category]=true`,
-      {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.jwt}`,
-        },
-      }
-    );
+    const [articleRes, commentsRes] = await Promise.all([
+      fetch(
+        `${process.env.STRAPI_URL}/api/articles?filters[documentId][$eq]=${documentId}&populate[author][populate][0]=avatar&populate[category]=true&populate[cover]=true`,
+        {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.jwt}`,
+          },
+        }
+      ),
+      fetch(
+        `${process.env.STRAPI_URL}/api/comments?filters[article][documentId][$eq]=${documentId}&filters[parent][$null]=true&populate[user][populate][0]=true&sort=createdAt:desc`,
+        {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.jwt}`,
+          },
+        }
+      ),
+    ]);
 
-    const data = await strapiRes.json();
+    const articleData = await articleRes.json();
+    const commentsData = await commentsRes.json();
 
-    if (!strapiRes.ok) {
+   
+
+    if (!articleRes.ok) {
       return NextResponse.json(
-        { message: data.error?.message || 'Failed to fetch article' },
-        { status: strapiRes.status }
+        { message: articleData.error?.message || 'Failed to fetch article' },
+        { status: articleRes.status }
       );
     }
 
-    if (!data.data || data.data.length === 0) {
+    if (!commentsRes.ok) {
+      return NextResponse.json(
+        { message: commentsData.error?.message || 'Failed to fetch comments' },
+        { status: commentsRes.status }
+      );
+    }
+
+    if (!articleData.data || articleData.data.length === 0) {
       return NextResponse.json({ message: 'Article not found' }, { status: 404 });
     }
 
-    return NextResponse.json(data.data[0]); // Return the first (and only) article
+    const flattenedArticle = flattenStrapiResponse(articleData.data[0]);
+    flattenedArticle.comments = flattenStrapiResponse(commentsData.data);
+
+    return NextResponse.json(flattenedArticle);
   } catch (error) {
     console.error('Single article fetch error:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
