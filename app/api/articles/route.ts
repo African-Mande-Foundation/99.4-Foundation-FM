@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const strapiRes = await fetch(
-      `${process.env.STRAPI_URL}/api/articles?populate[0]=author&populate[1]=category&populate[2]=cover`,
+      `${process.env.STRAPI_URL}/api/articles?populate[0]=author&populate[1]=category&populate[2]=cover&pagination[page]=1&pagination[pageSize]=4&sort[0]=publishedAt:desc`,
       {
         method: 'GET',
         headers: {
