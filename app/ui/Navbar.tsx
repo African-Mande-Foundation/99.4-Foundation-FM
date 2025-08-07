@@ -3,27 +3,47 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { ChevronDown, Search, X } from 'lucide-react';
+import { ChevronDown, Search, X, User } from 'lucide-react';
 import LanguageSearchBar from "./searchbar";
 import { Menu } from "lucide-react";
+import Image from "next/image";
+import { useSession, signOut } from "next-auth/react";
+
+interface UserProfile {
+    id: number;
+    username: string;
+    email: string;
+    photoUrl: string | null;
+}
 
 export default function Navbar() {
+    const { data: session, status } = useSession();
     const [activeSection, setActiveSection] = useState('home');
     const [showHomeDropdown, setShowHomeDropdown] = useState(false);
     const [showPagesDropdown, setShowPagesDropdown] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [showMobileHomeDropdown, setShowMobileHomeDropdown] = useState(false);
     const [showMobilePagesDropdown, setShowMobilePagesDropdown] = useState(false);
+    const [showUserDropdown, setShowUserDropdown] = useState(false);
     const homeDropdownRef = useRef<HTMLDivElement>(null);
     const pagesDropdownRef = useRef<HTMLDivElement>(null);
+    const userDropdownRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
     const searchParams = useSearchParams();
     const pathname = usePathname();
 
+    const handleLogout = async () => {
+        try {
+            await signOut({ callbackUrl: "/" });
+        } catch (error) {
+            console.error('Failed to logout', error);
+        }
+    };
+
     // Handle scroll to update active section
     useEffect(() => {
         const handleScroll = () => {
-            const sections = ['home', 'podcasts', 'collection', 'about', 'programs', 'testimonials', 'contact'];
+            const sections = ['home', 'podcasts', 'collection', 'about', 'programs', 'testimonials',];
             const scrollPosition = window.scrollY + 100;
 
             for (const section of sections) {
@@ -64,6 +84,9 @@ export default function Navbar() {
             }
             if (pagesDropdownRef.current && !pagesDropdownRef.current.contains(event.target as Node)) {
                 setShowPagesDropdown(false);
+            }
+            if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
+                setShowUserDropdown(false);
             }
         };
 
@@ -106,12 +129,11 @@ export default function Navbar() {
             <div className="hidden lg:flex items-center space-x-8 text-white font-bold text-sm">
                 {/* Home with dropdown */}
                 <div ref={homeDropdownRef} className="relative">
-                    <button 
-                        className={`flex items-center space-x-1 transition-all h-16 px-2 ${
-                            isHomeActive 
-                                ? 'bg-[#03A0B4] text-white' 
-                                : 'hover:text-[#03A0B4]'
-                        }`}
+                    <button
+                        className={`flex items-center space-x-1 transition-all h-16 px-2 ${isHomeActive
+                            ? 'bg-[#03A0B4] text-white'
+                            : 'hover:text-[#03A0B4]'
+                            }`}
                         onClick={() => setShowHomeDropdown(!showHomeDropdown)}
                     >
                         <span>HOME</span>
@@ -119,33 +141,30 @@ export default function Navbar() {
                     </button>
                     {showHomeDropdown && (
                         <div className="absolute top-full left-0 mt-1 bg-black border border-gray-700 min-w-[200px] py-2 rounded shadow-lg">
-                            <button 
+                            <button
                                 onClick={() => navigateToSection('podcasts')}
-                                className={`block w-full text-left px-4 py-2 transition-colors ${
-                                    activeSection === 'podcasts' 
-                                        ? 'bg-[#03A0B4] text-white' 
-                                        : 'hover:bg-gray-800 hover:text-[#03A0B4]'
-                                }`}
+                                className={`block w-full text-left px-4 py-2 transition-colors ${activeSection === 'podcasts'
+                                    ? 'bg-[#03A0B4] text-white'
+                                    : 'hover:bg-gray-800 hover:text-[#03A0B4]'
+                                    }`}
                             >
                                 Podcasts
                             </button>
-                            <button 
+                            <button
                                 onClick={() => navigateToSection('collection')}
-                                className={`block w-full text-left px-4 py-2 transition-colors ${
-                                    activeSection === 'collection' 
-                                        ? 'bg-[#03A0B4] text-white' 
-                                        : 'hover:bg-gray-800 hover:text-[#03A0B4]'
-                                }`}
+                                className={`block w-full text-left px-4 py-2 transition-colors ${activeSection === 'collection'
+                                    ? 'bg-[#03A0B4] text-white'
+                                    : 'hover:bg-gray-800 hover:text-[#03A0B4]'
+                                    }`}
                             >
                                 Collections
                             </button>
-                            <button 
+                            <button
                                 onClick={() => navigateToSection('about')}
-                                className={`block w-full text-left px-4 py-2 transition-colors ${
-                                    activeSection === 'about' 
-                                        ? 'bg-[#03A0B4] text-white' 
-                                        : 'hover:bg-gray-800 hover:text-[#03A0B4]'
-                                }`}
+                                className={`block w-full text-left px-4 py-2 transition-colors ${activeSection === 'about'
+                                    ? 'bg-[#03A0B4] text-white'
+                                    : 'hover:bg-gray-800 hover:text-[#03A0B4]'
+                                    }`}
                             >
                                 About Station
                             </button>
@@ -155,12 +174,11 @@ export default function Navbar() {
 
                 {/* Pages with dropdown */}
                 <div ref={pagesDropdownRef} className="relative">
-                    <button 
-                        className={`flex items-center space-x-1 transition-all h-16 px-2 ${
-                            isPagesActive 
-                                ? 'bg-[#03A0B4] text-white' 
-                                : 'hover:text-[#03A0B4]'
-                        }`}
+                    <button
+                        className={`flex items-center space-x-1 transition-all h-16 px-2 ${isPagesActive
+                            ? 'bg-[#03A0B4] text-white'
+                            : 'hover:text-[#03A0B4]'
+                            }`}
                         onClick={() => setShowPagesDropdown(!showPagesDropdown)}
                     >
                         <span>PAGES</span>
@@ -168,33 +186,30 @@ export default function Navbar() {
                     </button>
                     {showPagesDropdown && (
                         <div className="absolute top-full left-0 mt-1 bg-black border border-gray-700 min-w-[200px] py-2 rounded shadow-lg">
-                            <Link 
-                                href="/about" 
-                                className={`block px-4 py-2 transition-colors ${
-                                    pathname === '/about' 
-                                        ? 'bg-[#03A0B4] text-white' 
-                                        : 'hover:bg-gray-800 hover:text-[#03A0B4]'
-                                }`}
+                            <Link
+                                href="/about"
+                                className={`block px-4 py-2 transition-colors ${pathname === '/about'
+                                    ? 'bg-[#03A0B4] text-white'
+                                    : 'hover:bg-gray-800 hover:text-[#03A0B4]'
+                                    }`}
                             >
                                 About Us
                             </Link>
-                            <Link 
-                                href="/media" 
-                                className={`block px-4 py-2 transition-colors ${
-                                    pathname === '/media' 
-                                        ? 'bg-[#03A0B4] text-white' 
-                                        : 'hover:bg-gray-800 hover:text-[#03A0B4]'
-                                }`}
+                            <Link
+                                href="/media"
+                                className={`block px-4 py-2 transition-colors ${pathname === '/media'
+                                    ? 'bg-[#03A0B4] text-white'
+                                    : 'hover:bg-gray-800 hover:text-[#03A0B4]'
+                                    }`}
                             >
                                 Media Gallery
                             </Link>
-                            <Link 
-                                href="/initiatives" 
-                                className={`block px-4 py-2 transition-colors ${
-                                    pathname === '/initiatives' 
-                                        ? 'bg-[#03A0B4] text-white' 
-                                        : 'hover:bg-gray-800 hover:text-[#03A0B4]'
-                                }`}
+                            <Link
+                                href="/initiatives"
+                                className={`block px-4 py-2 transition-colors ${pathname === '/initiatives'
+                                    ? 'bg-[#03A0B4] text-white'
+                                    : 'hover:bg-gray-800 hover:text-[#03A0B4]'
+                                    }`}
                             >
                                 Initiatives
                             </Link>
@@ -203,72 +218,97 @@ export default function Navbar() {
                 </div>
 
                 {/* Programs - Active state */}
-                <button 
+                <button
                     onClick={() => navigateToSection('programs')}
-                    className={`h-16 px-2 transition-all ${
-                        activeSection === 'programs' 
-                            ? 'bg-[#03A0B4] text-white' 
-                            : 'hover:text-[#03A0B4]'
-                    }`}
+                    className={`h-16 px-2 transition-all ${activeSection === 'programs'
+                        ? 'bg-[#03A0B4] text-white'
+                        : 'hover:text-[#03A0B4]'
+                        }`}
                 >
                     PROGRAMS
                 </button>
 
                 {/* Testimonials */}
-                <button 
+                <button
                     onClick={() => navigateToSection('testimonials')}
-                    className={`h-16 px-2 transition-all ${
-                        activeSection === 'testimonials' ? 'bg-[#03A0B4] text-white' : 'hover:text-[#03A0B4]'
-                    }`}
+                    className={`h-16 px-2 transition-all ${activeSection === 'testimonials' ? 'bg-[#03A0B4] text-white' : 'hover:text-[#03A0B4]'
+                        }`}
                 >
                     TESTIMONIAL
                 </button>
 
                 {/* News */}
-                <Link 
-                    href="/news" 
-                    className={`h-16 px-2 flex items-center transition-all ${
-                        pathname === '/news' 
-                            ? 'bg-[#03A0B4] text-white' 
-                            : 'hover:text-[#03A0B4]'
-                    }`}
+                <Link
+                    href="/news"
+                    className={`h-16 px-2 flex items-center transition-all ${pathname === '/news'
+                        ? 'bg-[#03A0B4] text-white'
+                        : 'hover:text-[#03A0B4]'
+                        }`}
                 >
                     NEWS
                 </Link>
 
                 {/* Contact Us */}
-                <button 
+                <button
                     onClick={() => navigateToSection('contact')}
-                    className={`h-16 px-2 transition-all ${
-                        activeSection === 'contact' ? 'bg-[#03A0B4] text-white' : 'hover:text-[#03A0B4]'
-                    }`}
+                    className={`h-16 px-2 transition-all ${activeSection === 'contact' ? 'bg-[#03A0B4] text-white' : 'hover:text-[#03A0B4]'
+                        }`}
                 >
                     CONTACT US
                 </button>
 
                 {/* Donate */}
-                <Link 
-                    href="/donate" 
-                    className={`h-16 px-2 flex items-center transition-all ${
-                        pathname === '/donate' 
-                            ? 'bg-[#03A0B4] text-white' 
-                            : 'hover:text-[#03A0B4]'
-                    }`}
+                <Link
+                    href="/donate"
+                    className={`h-16 px-2 flex items-center transition-all ${pathname === '/donate'
+                        ? 'bg-[#03A0B4] text-white'
+                        : 'hover:text-[#03A0B4]'
+                        }`}
                 >
                     DONATE
                 </Link>
 
                 {/* Join Live */}
-                <Link 
-                    href="/join-live" 
-                    className={`h-16 px-2 flex items-center transition-all ${
-                        pathname === '/join-live' 
-                            ? 'bg-[#03A0B4] text-white' 
-                            : 'hover:text-[#03A0B4]'
-                    }`}
+                <Link
+                    href="/join-live"
+                    className={`h-16 px-2 flex items-center transition-all ${pathname === '/join-live'
+                        ? 'bg-[#03A0B4] text-white'
+                        : 'hover:text-[#03A0B4]'
+                        }`}
                 >
                     JOIN LIVE
                 </Link>
+                {status === "authenticated" && session.user ? (
+                    <div ref={userDropdownRef} className="relative">
+                        <button onClick={() => setShowUserDropdown(!showUserDropdown)}>
+                            {session.user.photoUrl ? (
+                                <img
+                                    src={session.user.photoUrl || "https://images.unsplash.com/photo-1508138221679-760a23a2285b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cmFuZG9tfGVufDB8fDB8fHww"}
+                                    alt="User profile"
+                                    width={40}
+                                    height={40}
+                                    className="rounded-full"
+                                />
+                            ) : (
+                                <User className="w-8 h-8 rounded-full bg-gray-700 p-1" />
+                            )}
+                        </button>
+                        {showUserDropdown && (
+                            <div className="absolute top-full right-0 mt-1 bg-black border border-gray-700 min-w-[150px] py-2 rounded shadow-lg">
+                                <button
+                                    onClick={handleLogout}
+                                    className="block w-full text-left px-4 py-2 transition-colors hover:bg-gray-800 hover:text-[#03A0B4]"
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <>
+                        
+                    </>
+                )}
             </div>
 
             {/* Mobile layout */}
@@ -292,7 +332,7 @@ export default function Navbar() {
                     </button>
 
                     {/* Mobile menu button */}
-                    <button 
+                    <button
                         className="text-[#03A0B4]"
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     >
@@ -326,7 +366,7 @@ export default function Navbar() {
                         <div className="px-4 py-6 space-y-4">
                             {/* Home with dropdown */}
                             <div className="border-b border-gray-700 pb-4">
-                                <button 
+                                <button
                                     className="flex items-center justify-between w-full text-white font-bold text-sm mb-2"
                                     onClick={() => setShowMobileHomeDropdown(!showMobileHomeDropdown)}
                                 >
@@ -335,33 +375,30 @@ export default function Navbar() {
                                 </button>
                                 {showMobileHomeDropdown && (
                                     <div className="pl-4 space-y-2">
-                                        <button 
+                                        <button
                                             onClick={() => navigateToSection('podcasts')}
-                                            className={`block w-full text-left py-2 transition-colors ${
-                                                activeSection === 'podcasts' 
-                                                    ? 'text-[#03A0B4]' 
-                                                    : 'text-gray-300 hover:text-[#03A0B4]'
-                                            }`}
+                                            className={`block w-full text-left py-2 transition-colors ${activeSection === 'podcasts'
+                                                ? 'text-[#03A0B4]'
+                                                : 'text-gray-300 hover:text-[#03A0B4]'
+                                                }`}
                                         >
                                             Podcasts
                                         </button>
-                                        <button 
+                                        <button
                                             onClick={() => navigateToSection('collection')}
-                                            className={`block w-full text-left py-2 transition-colors ${
-                                                activeSection === 'collection' 
-                                                    ? 'text-[#03A0B4]' 
-                                                    : 'text-gray-300 hover:text-[#03A0B4]'
-                                            }`}
+                                            className={`block w-full text-left py-2 transition-colors ${activeSection === 'collection'
+                                                ? 'text-[#03A0B4]'
+                                                : 'text-gray-300 hover:text-[#03A0B4]'
+                                                }`}
                                         >
                                             Collections
                                         </button>
-                                        <button 
+                                        <button
                                             onClick={() => navigateToSection('about')}
-                                            className={`block w-full text-left py-2 transition-colors ${
-                                                activeSection === 'about' 
-                                                    ? 'text-[#03A0B4]' 
-                                                    : 'text-gray-300 hover:text-[#03A0B4]'
-                                            }`}
+                                            className={`block w-full text-left py-2 transition-colors ${activeSection === 'about'
+                                                ? 'text-[#03A0B4]'
+                                                : 'text-gray-300 hover:text-[#03A0B4]'
+                                                }`}
                                         >
                                             About Station
                                         </button>
@@ -371,7 +408,7 @@ export default function Navbar() {
 
                             {/* Pages with dropdown */}
                             <div className="border-b border-gray-700 pb-4">
-                                <button 
+                                <button
                                     className="flex items-center justify-between w-full text-white font-bold text-sm mb-2"
                                     onClick={() => setShowMobilePagesDropdown(!showMobilePagesDropdown)}
                                 >
@@ -380,33 +417,30 @@ export default function Navbar() {
                                 </button>
                                 {showMobilePagesDropdown && (
                                     <div className="pl-4 space-y-2">
-                                        <Link 
-                                            href="/about" 
-                                            className={`block py-2 transition-colors ${
-                                                pathname === '/about' 
-                                                    ? 'text-[#03A0B4]' 
-                                                    : 'text-gray-300 hover:text-[#03A0B4]'
-                                            }`}
+                                        <Link
+                                            href="/about"
+                                            className={`block py-2 transition-colors ${pathname === '/about'
+                                                ? 'text-[#03A0B4]'
+                                                : 'text-gray-300 hover:text-[#03A0B4]'
+                                                }`}
                                         >
                                             About Us
                                         </Link>
-                                        <Link 
-                                            href="/media" 
-                                            className={`block py-2 transition-colors ${
-                                                pathname === '/media' 
-                                                    ? 'text-[#03A0B4]' 
-                                                    : 'text-gray-300 hover:text-[#03A0B4]'
-                                            }`}
+                                        <Link
+                                            href="/media"
+                                            className={`block py-2 transition-colors ${pathname === '/media'
+                                                ? 'text-[#03A0B4]'
+                                                : 'text-gray-300 hover:text-[#03A0B4]'
+                                                }`}
                                         >
                                             Media Gallery
                                         </Link>
-                                        <Link 
-                                            href="/initiatives" 
-                                            className={`block py-2 transition-colors ${
-                                                pathname === '/initiatives' 
-                                                    ? 'text-[#03A0B4]' 
-                                                    : 'text-gray-300 hover:text-[#03A0B4]'
-                                            }`}
+                                        <Link
+                                            href="/initiatives"
+                                            className={`block py-2 transition-colors ${pathname === '/initiatives'
+                                                ? 'text-[#03A0B4]'
+                                                : 'text-gray-300 hover:text-[#03A0B4]'
+                                                }`}
                                         >
                                             Initiatives
                                         </Link>
@@ -416,13 +450,12 @@ export default function Navbar() {
 
                             {/* Programs */}
                             <div className="border-b border-gray-700 pb-4">
-                                <button 
+                                <button
                                     onClick={() => navigateToSection('programs')}
-                                    className={`block w-full text-left py-2 font-bold text-sm transition-colors ${
-                                        activeSection === 'programs' 
-                                            ? 'text-[#03A0B4]' 
-                                            : 'text-white hover:text-[#03A0B4]'
-                                    }`}
+                                    className={`block w-full text-left py-2 font-bold text-sm transition-colors ${activeSection === 'programs'
+                                        ? 'text-[#03A0B4]'
+                                        : 'text-white hover:text-[#03A0B4]'
+                                        }`}
                                 >
                                     PROGRAMS
                                 </button>
@@ -430,13 +463,12 @@ export default function Navbar() {
 
                             {/* Testimonials */}
                             <div className="border-b border-gray-700 pb-4">
-                                <button 
+                                <button
                                     onClick={() => navigateToSection('testimonials')}
-                                    className={`block w-full text-left py-2 font-bold text-sm transition-colors ${
-                                        activeSection === 'testimonials' 
-                                            ? 'text-[#03A0B4]' 
-                                            : 'text-white hover:text-[#03A0B4]'
-                                    }`}
+                                    className={`block w-full text-left py-2 font-bold text-sm transition-colors ${activeSection === 'testimonials'
+                                        ? 'text-[#03A0B4]'
+                                        : 'text-white hover:text-[#03A0B4]'
+                                        }`}
                                 >
                                     TESTIMONIAL
                                 </button>
@@ -444,13 +476,12 @@ export default function Navbar() {
 
                             {/* News */}
                             <div className="border-b border-gray-700 pb-4">
-                                <Link 
-                                    href="/news" 
-                                    className={`block py-2 font-bold text-sm transition-colors ${
-                                        pathname === '/news' 
-                                            ? 'text-[#03A0B4]' 
-                                            : 'text-white hover:text-[#03A0B4]'
-                                    }`}
+                                <Link
+                                    href="/news"
+                                    className={`block py-2 font-bold text-sm transition-colors ${pathname === '/news'
+                                        ? 'text-[#03A0B4]'
+                                        : 'text-white hover:text-[#03A0B4]'
+                                        }`}
                                 >
                                     NEWS
                                 </Link>
@@ -458,13 +489,12 @@ export default function Navbar() {
 
                             {/* Contact Us */}
                             <div className="border-b border-gray-700 pb-4">
-                                <button 
+                                <button
                                     onClick={() => navigateToSection('contact')}
-                                    className={`block w-full text-left py-2 font-bold text-sm transition-colors ${
-                                        activeSection === 'contact' 
-                                            ? 'text-[#03A0B4]' 
-                                            : 'text-white hover:text-[#03A0B4]'
-                                    }`}
+                                    className={`block w-full text-left py-2 font-bold text-sm transition-colors ${activeSection === 'contact'
+                                        ? 'text-[#03A0B4]'
+                                        : 'text-white hover:text-[#03A0B4]'
+                                        }`}
                                 >
                                     CONTACT US
                                 </button>
@@ -472,13 +502,12 @@ export default function Navbar() {
 
                             {/* Donate */}
                             <div className="border-b border-gray-700 pb-4">
-                                <Link 
-                                    href="/donate" 
-                                    className={`block py-2 font-bold text-sm transition-colors ${
-                                        pathname === '/donate' 
-                                            ? 'text-[#03A0B4]' 
-                                            : 'text-white hover:text-[#03A0B4]'
-                                    }`}
+                                <Link
+                                    href="/donate"
+                                    className={`block py-2 font-bold text-sm transition-colors ${pathname === '/donate'
+                                        ? 'text-[#03A0B4]'
+                                        : 'text-white hover:text-[#03A0B4]'
+                                        }`}
                                 >
                                     DONATE
                                 </Link>
@@ -486,17 +515,31 @@ export default function Navbar() {
 
                             {/* Join Live */}
                             <div className="pb-4">
-                                <Link 
-                                    href="/join-live" 
-                                    className={`block py-2 font-bold text-sm transition-colors ${
-                                        pathname === '/join-live' 
-                                            ? 'text-[#03A0B4]' 
-                                            : 'text-white hover:text-[#03A0B4]'
-                                    }`}
+                                <Link
+                                    href="/join-live"
+                                    className={`block py-2 font-bold text-sm transition-colors ${pathname === '/join-live'
+                                        ? 'text-[#03A0B4]'
+                                        : 'text-white hover:text-[#03A0B4]'
+                                        }`}
                                 >
                                     JOIN LIVE
                                 </Link>
                             </div>
+
+                            {status === "authenticated" && session.user ? (
+                                <div className="border-b border-gray-700 pb-4">
+                                    <button
+                                        onClick={handleLogout}
+                                        className="block w-full text-left py-2 font-bold text-sm transition-colors text-white hover:text-[#03A0B4]"
+                                    >
+                                        LOGOUT
+                                    </button>
+                                </div>
+                            ) : (
+                                <>
+                                    
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

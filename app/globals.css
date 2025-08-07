@@ -56,3 +56,27 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #ffffff !important;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 1rem;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background-color: rgba(0, 0, 0, 1);
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 1.2rem;
+}
+

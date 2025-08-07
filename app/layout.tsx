@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Merriweather} from "next/font/google";
+import { Providers } from "./providers";
 import "./globals.css";
 
 const merriweather = Merriweather({
@@ -24,7 +25,7 @@ export default function RootLayout({
       <body
         className={`${merriweather.className} antialiased`}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
