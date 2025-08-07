@@ -35,6 +35,7 @@ const InfoCards = () => {
                                 alt={card.title}
                                 fill
                                 className="object-cover rounded-md"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             />
                         </div>
                         <h3 className="text-lg font-bold mb-2">{card.title}</h3>

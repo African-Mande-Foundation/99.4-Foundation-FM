@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { useParams } from 'next/navigation';
+import { useParams , useRouter} from 'next/navigation';
 import Navbar from '@/app/ui/Navbar';
 import Footer from '@/app/ui/Footer';
 import ArticleGrid from '@/app/news/components/ArticleGrid';
@@ -21,6 +21,7 @@ const CategoryPage = () => {
   const { data: session, status } = useSession();
   const params = useParams();
   const categorySlug = params.categorySlug as string;
+  const router = useRouter();
 
   useEffect(() => {
     if (status !== 'authenticated' || !categorySlug) return;
@@ -61,6 +62,9 @@ const CategoryPage = () => {
     <div className="min-h-screen bg-white text-gray-800">
       <Navbar />
       <div className="pt-20 px-4 sm:px-8 lg:px-16 xl:px-24 2xl:px-32 w-full mx-auto py-8">
+        <button onClick={() => router.back()} className="mb-4 text-blue-500 hover:underline">
+          &larr; Back
+        </button>
         <h1 className="text-4xl font-bold mb-8">Category: {categorySlug}</h1>
         {error && <p className="text-red-500">{error}</p>}
         {isLoading ? (

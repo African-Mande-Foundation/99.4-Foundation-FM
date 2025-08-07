@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
         data: {
           Content: content,
           article: articleId,
-          profile: session.user.id,
+          user: session.user.id,
           parent: parentId || null,
         },
       }),

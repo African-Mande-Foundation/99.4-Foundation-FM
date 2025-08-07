@@ -11,7 +11,7 @@ interface AuthorsProps {
 
 const Authors = ({ authors, onAuthorClick }: AuthorsProps) => {
   if (!authors) {
-    return <p className="col-span-full text-center text-gray-600">Loading articles...</p>;
+    return <p className="col-span-full text-center text-gray-600">No authors found</p>;
   }
   return (
     <div className="p-6 mb-8">

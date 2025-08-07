@@ -95,20 +95,14 @@ export default function ArticlePage() {
 
         <div className="mt-8">
           <h2 className="text-2xl font-bold mb-4">Comments</h2>
-          {session ? (
-            <CommentForm
-              articleId={documentId}
-              userId={session.user?.id}
-              parentId={parentCommentId}
-              onCommentPosted={handleCommentPosted}
-            />
-          ) : (
-            <p className="text-center text-gray-600 mb-8">
-              Please <Link href="/login" className="text-blue-500 hover:underline">log in</Link> to post comments.
-            </p>
-          )}
-
-          <CommentList comments={article.comments} onReplyClick={handleReplyClick} />
+          <CommentList
+            comments={article.comments}
+            articleId={documentId}
+            userId={session?.user?.id}
+            onCommentPosted={handleCommentPosted}
+            currentParentCommentId={parentCommentId}
+            onSetParentCommentId={setParentCommentId}
+          />
         </div>
       </div>
       <Footer />

@@ -10,7 +10,7 @@ interface CategoriesProps {
 
 const Categories = ({ categories }: CategoriesProps) => {
   if(!categories){
-    return  <p className="col-span-full text-center text-gray-600">Loading articles...</p>;
+    return  <p className="col-span-full text-center text-gray-600">No categories found</p>;
   }
   return (
     <div className="w-full p-6 mb-8 border-t-8 border-b-8 border-black  ">
@@ -28,9 +28,9 @@ const Categories = ({ categories }: CategoriesProps) => {
                   <Image
                     src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${category.cover.formats.thumbnail.url}`}
                     alt={category.name}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-md"
+                    fill
+                    className="rounded-md object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                 </div>
               )}

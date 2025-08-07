@@ -9,7 +9,7 @@ declare module 'next-auth' {
     name?: string | null;
     email?: string | null;
     image?: string | null;
-    photoUrl?: string | null; 
+    photoUrl?: string | null;
   }
   interface Session {
     jwt?: string;
@@ -87,15 +87,9 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile, trigger }: { user: any; account: any; profile?: any; trigger?: string }) {
-    
+
       if (account?.provider === 'google' && profile?.email) {
         try {
-          // Extract subscribeToNewsletter from callbackUrl
-          let subscribeToNewsletter = false;
-          if (trigger === 'signIn') {
-            const callbackUrl = new URL(account.callbackUrl || `${process.env.NEXTAUTH_URL}/`);
-            subscribeToNewsletter = callbackUrl.searchParams.get('subscribe') === 'true';
-          }
 
           // Check if user exists in Strapi using findByEmail API
           const checkUserRes = await fetch(`${process.env.STRAPI_URL}/api/check-user`, {
