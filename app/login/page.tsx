@@ -8,8 +8,6 @@ import { signIn } from "next-auth/react";
 import { useSession } from 'next-auth/react';
 import { Eye, EyeOff } from 'lucide-react';
 import Image from 'next/image';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -139,7 +137,7 @@ export default function LoginPage() {
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#03A0B4] hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:opacity-50 cursor-pointer"
+                                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#03A0B4] hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:opacity-50 cursor-pointer transition ease-in-out duration-150"
                                 >
                                     {isLoading ? 'Signing in...' : 'Sign in'}
                                 </button>
@@ -159,7 +157,7 @@ export default function LoginPage() {
 
                             <div className="mt-6">
                                 <button aria-label="Continue with Google"
-                                    onClick={handleGoogleSignIn} disabled={isLoading} className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-[#026C79] text-sm font-medium text-white hover:bg-gray-50 hover:text-black cursor-pointer">
+                                    onClick={handleGoogleSignIn} disabled={isLoading} className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-[#026C79] text-sm font-medium text-white hover:bg-gray-50 hover:text-black cursor-pointer transition ease-in-out duration-150">
                                     <Image src="https://firebasestorage.googleapis.com/v0/b/foundation-fm.firebasestorage.app/o/Foundation_FM_Media%2Ficons8-google-48.png?alt=media&token=b423d98b-7fca-4535-a5d8-3ef2e849680d" alt="google_icon" width={30} height={30} className='shadow-2xl shadow-black' />
 
                                     <span className="ml-4">Continue with Google</span>
