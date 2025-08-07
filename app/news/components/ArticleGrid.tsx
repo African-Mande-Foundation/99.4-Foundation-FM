@@ -11,7 +11,7 @@ interface ArticleGridProps {
 const ArticleGrid = ({ articles }: ArticleGridProps) => {
 
   if (!articles) {
-    return <p className="col-span-full text-center text-gray-600">Loading articles...</p>;
+    return <p className="col-span-full text-center text-gray-600">No articles found</p>;
   }
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">

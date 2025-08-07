@@ -10,7 +10,7 @@ interface CategoriesProps {
 
 const Categories = ({ categories }: CategoriesProps) => {
   if(!categories){
-    return  <p className="col-span-full text-center text-gray-600">Loading articles...</p>;
+    return  <p className="col-span-full text-center text-gray-600">No categories found</p>;
   }
   return (
     <div className="w-full p-6 mb-8 border-t-8 border-b-8 border-black  ">

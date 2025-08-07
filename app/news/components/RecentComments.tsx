@@ -10,7 +10,7 @@ interface RecentCommentsProps {
 const RecentComments = ({ recentComments }: RecentCommentsProps) => {
 
   if (!recentComments) {
-    return <p className="col-span-full text-center text-gray-600">Loading comments...</p>;
+    return <p className="col-span-full text-center text-gray-600">No comments found</p>;
   }
   return (
     <div className="p-6  border-t-8  border-black">
