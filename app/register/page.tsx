@@ -3,21 +3,23 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '../ui/Navbar';
-import Footer from '../ui/Footer';
 import Link from 'next/link';
 import { signIn, getSession } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Eye, EyeOff } from 'lucide-react';
+import Image from 'next/image';
 import LoadingBar from '../ui/LoadingBar';
 
 export default function RegisterPage() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState('');
     const [subscribeToNewsletter, setSubscribeToNewsletter] = useState(false);
-    const [newsletterLoading, setNewsLetterLoading] = useState(false)
+    const [newsletterLoading, setNewsLetterLoading] = useState(false);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
@@ -133,26 +135,26 @@ export default function RegisterPage() {
                 <Navbar />
                 <LoadingBar />
                 <h5>Redirecting</h5>
-                <Footer />
+                
             </>
         )
     }
 
     return (
-        <>
+        <div className="w-screen h-screen">
             <Navbar />
-            <div className="min-h-screen bg-gray-100 flex flex-col justify-center">
-                <div className="sm:mx-auto sm:w-full sm:max-w-md">
-                    <h2 className="text-center text-3xl font-extrabold text-gray-900">
-                        Create your account
-                    </h2>
-                </div>
-                <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                    <div className="bg-white py-8 px-4 shadow-lg sm:px-10">
+            <div className="relative flex flex-col items-center w-95/100 h-85/100 justify-center">
+               <div className="absolute top-0 left-0 z-30 p-4 w-full bg-white h-full items-center justify-center flex">
+                   <div className='w-[280px] md:w-[400px]'>
+                    <div>
+                        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                            Sign Up
+                        </h2>
+                    </div>
                         <form className="space-y-6" onSubmit={handleSubmit}>
                             {error && <p className="text-red-500 text-center text-sm">{error}</p>}
                             <div className="space-y-4">
-                                <div>
+                                <div className="flex flex-col mb-2 pt-2">
                                     <label htmlFor="full-name" className="sr-only">Full name</label>
                                     <input
                                         id="full-name"
@@ -161,11 +163,11 @@ export default function RegisterPage() {
                                         required
                                         value={username}
                                         onChange={(e) => setUsername(e.target.value)}
-                                        className="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm"
+                                        className="relative block w-full p-2 border-2 border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none bg-[#F5F5F5] focus:ring-[#03A0B4] focus:border-[#03A0B4] focus:z-10 sm:text-sm"
                                         placeholder="Full name"
                                     />
                                 </div>
-                                <div>
+                                <div className="flex flex-col mb-2 pt-2">
                                     <label htmlFor="email-address" className="sr-only">Email address</label>
                                     <input
                                         id="email-address"
@@ -175,37 +177,58 @@ export default function RegisterPage() {
                                         required
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm"
+                                        className="relative block w-full p-2 border-2 border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none bg-[#F5F5F5] focus:ring-[#03A0B4] focus:border-[#03A0B4] focus:z-10 sm:text-sm"
                                         placeholder="Email address"
                                     />
                                 </div>
-                                <div>
+                                 <div className="flex flex-col mb-4 border-2 rounded-md border-gray-300">
                                     <label htmlFor="password" className="sr-only">Password</label>
+                                    <div className='w-full flex 
+                                
+                                items-center justify-center   focus:ring-[#03A0B4] focus:border-[#03A0B4] focus:z-10 '>
                                     <input
                                         id="password"
                                         name="password"
-                                        type="password"
+                                        type={showPassword ? 'text' : 'password'}
                                         autoComplete="new-password"
                                         required
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm"
+                                        className="relative block w-80/100 md:w-90/100 p-2 placeholder-gray-500 text-gray-900  focus:outline-none bg-[#F5F5F5] focus:ring-[#03A0B4] focus:border-[#03A0B4] border-gray-300 focus:z-10  sm:text-sm border-1 rounded-l-sm border-r-2"
                                         placeholder="Password"
                                     />
+                                    <div className='w-20/100 md:w-10/100 flex items-center justify-center p-2
+                                 bg-[#F5F5F5]focus:outline-none focus:ring-[#03A0B4] focus:border-[#03A0B4] focus:z-10 border-gray-300 rounded-r-md text-gray-900 '>
+                                     <button type="button" className='cursor-pointer' onClick={() => setShowPassword((prev) => !prev)} tabIndex={-1}>
+                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </button>
                                 </div>
-                                <div>
+                                </div>
+                                </div>
+
+                                  <div className="flex flex-col mb-4 border-2 rounded-md border-gray-300">
                                     <label htmlFor="confirm-password" className="sr-only">Confirm password</label>
+                                    <div className='w-full flex 
+                                
+                                items-center justify-center   focus:ring-[#03A0B4] focus:border-[#03A0B4] focus:z-10 '>
                                     <input
                                         id="confirm-password"
                                         name="confirm-password"
-                                        type="password"
+                                        type={showPassword ? 'text' : 'password'}
                                         autoComplete="new-password"
                                         required
                                         value={confirmPassword}
                                         onChange={(e) => setConfirmPassword(e.target.value)}
-                                        className="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm"
+                                        className="relative block w-80/100 md:w-90/100 p-2 placeholder-gray-500 text-gray-900  focus:outline-none bg-[#F5F5F5] focus:ring-[#03A0B4] focus:border-[#03A0B4] border-gray-300 focus:z-10  sm:text-sm border-1 rounded-l-sm border-r-2"
                                         placeholder="Confirm password"
                                     />
+                                    <div className='w-20/100 md:w-10/100 flex items-center justify-center p-2
+                                 bg-[#F5F5F5]focus:outline-none focus:ring-[#03A0B4] focus:border-[#03A0B4] focus:z-10 border-gray-300 rounded-r-md text-gray-900 '>
+                                     <button type="button" className='cursor-pointer' onClick={() => setShowPassword((prev) => !prev)} tabIndex={-1}>
+                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </button>
+                                </div>
+                                </div>
                                 </div>
                             </div>
 
@@ -227,7 +250,7 @@ export default function RegisterPage() {
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:opacity-50 transition ease-in-out duration-150"
+                                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#03A0B4] hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:opacity-50 cursor-pointer transition ease-in-out duration-150"
                                 >
                                     {isLoading ? 'Signing up...' : 'Sign up'}
                                 </button>
@@ -249,21 +272,26 @@ export default function RegisterPage() {
                             <div className="mt-6">
                                 <button aria-label="Sign in with Google"
                                     onClick={handleGoogleSignIn} disabled={isLoading}
-                                    className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition ease-in-out duration-150">
-                                    <FontAwesomeIcon icon={faGoogle} className="w-5 h-5 text-gray-600" />
-                                    <span className="ml-3">Sign up with Google</span>
+                                    className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-[#026C79] text-sm font-medium text-white hover:bg-gray-50 hover:text-black cursor-pointer transition ease-in-out duration-150">
+                                    <Image src="https://firebasestorage.googleapis.com/v0/b/foundation-fm.firebasestorage.app/o/Foundation_FM_Media%2Ficons8-google-48.png?alt=media&token=b423d98b-7fca-4535-a5d8-3ef2e849680d" alt="google_icon" width={30} height={30} className='shadow-2xl shadow-black' />
+                                    <span className="ml-3">Continue with Google</span>
                                 </button>
                             </div>
                         </div>
-                        <div className="mt-6 text-sm text-center">
+                        <div className="text-sm mt-6 flex items-center justify-center gap-2 w-full text-center">
+                        <p className='text-black'>Already have an account?</p>
                             <Link href="/login" className="font-medium text-cyan-600 hover:text-cyan-500">
-                                Already have an account? Sign in
+                                 Sign in
                             </Link>
                         </div>
-                    </div>
+                   
                 </div>
-            </div>
-            <Footer />
-        </>
+                </div>
+                <div className="absolute top-1 left-1 md:top-2 md:left-2 z-20 w-full bg-white/60 h-full"></div>
+            <div className="absolute top-2 left-2 md:top-4 md:left-4 z-10 w-full bg-white/30 h-full"></div>
+            
+            
+          </div>
+        </div>
     );
 }
