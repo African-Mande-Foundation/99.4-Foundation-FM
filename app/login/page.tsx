@@ -49,7 +49,8 @@ export default function LoginPage() {
             redirect: false,
         });
         if (res?.error) {
-            console.error(res.error);
+            setError(res.error)
+            setIsLoading(false)
         } else {
             window.location.href = "/";
         }
@@ -69,7 +70,7 @@ export default function LoginPage() {
     return (
         <>
             <Navbar />
-            <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+            <div className=" bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
                     <h2 className="text-center text-3xl font-extrabold text-gray-900">
                         Sign in to your account

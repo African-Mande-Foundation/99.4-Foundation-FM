@@ -35,7 +35,6 @@ export async function GET() {
             commentsRes.json(),
         ]);
 
-
         return NextResponse.json({
             articles: flattenStrapiResponse(articles.data),
             categories: flattenStrapiResponse(categories.data),

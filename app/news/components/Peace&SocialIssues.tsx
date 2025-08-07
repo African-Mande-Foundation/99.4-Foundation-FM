@@ -9,7 +9,7 @@ const PeaceAndSocialIssues = () => {
                 {/* Section Heading */}
                 <div className="mb-8 flex gap-4 items-center">
                     <div className="text-white px-4 py-2 rounded-md">
-                        <h2 className="text-2xl font-bold m-0">Peace & Social Issues</h2>
+                        <h2 className="bg-black text-white text-2xl font-bold px-3 py-1">Peace & Social Issues</h2>
                     </div>
                     <p className="text-gray-700">
                         With coverage on peace-building efforts
