@@ -308,6 +308,7 @@ export default function Navbar() {
                     </>
                 ) : (
                     <>
+                        
                     </>
                 )}
             </div>
@@ -538,28 +539,7 @@ export default function Navbar() {
                                 </div>
                             ) : (
                                 <>
-                                    <div className="border-b border-gray-700 pb-4">
-                                        <Link
-                                            href="/register"
-                                            className={`block py-2 font-bold text-sm transition-colors ${pathname === '/register'
-                                                ? 'text-[#03A0B4]'
-                                                : 'text-white hover:text-[#03A0B4]'
-                                                }`}
-                                        >
-                                            SIGN UP
-                                        </Link>
-                                    </div>
-                                    <div className="border-b border-gray-700 pb-4">
-                                        <Link
-                                            href="/login"
-                                            className={`block py-2 font-bold text-sm transition-colors ${pathname === '/login'
-                                                ? 'text-[#03A0B4]'
-                                                : 'text-white hover:text-[#03A0B4]'
-                                                }`}
-                                        >
-                                            LOGIN
-                                        </Link>
-                                    </div>
+                                    
                                 </>
                             )}
                         </div>
