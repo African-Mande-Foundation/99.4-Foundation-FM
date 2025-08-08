@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 const generateRandomLines = () =>
@@ -12,7 +12,7 @@ const generateRandomLines = () =>
   }));
 
 export default function MovingLines() {
-  const [lines, setLines] = useState(generateRandomLines);
+  const [lines] = useState(generateRandomLines);
 
   return (
     <div className="w-full h-24 bg-transparent flex flex-col justify-center gap-2 ">

@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import classNames from 'classnames';
 import Link from 'next/link';
-import {Search, SearchIcon} from 'lucide-react';
+
 import LanguageSearchBar from './searchbar';
 import Player from '@/app/ui/player';
 

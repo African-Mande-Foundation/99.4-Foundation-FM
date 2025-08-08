@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import Image from 'next/image';
 
 const topSlides = [
     {
@@ -34,10 +35,11 @@ export default function TopNewsSlider () {
             idx === current ? 'opacity-100 z-10' : 'opacity-0 z-0'
           }`}
         >
-          <img
+          <Image
             src={slide.image}
             alt={slide.title}
-            className="w-full h-full object-cover"
+            layout="fill"
+            objectFit="cover"
           />
           <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
             <h1 className="text-white text-3xl font-bold text-center max-w-xl px-4">

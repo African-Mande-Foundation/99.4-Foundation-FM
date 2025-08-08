@@ -2,6 +2,7 @@ import { flattenStrapiResponse } from '@/app/lib/utils';
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from "../../auth/[...nextauth]/authOptions"
+import { ArticleData , Comment} from '@/app/lib/types'
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
@@ -62,13 +63,16 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message: 'Article not found' }, { status: 404 });
     }
 
-    const flattenedArticle = flattenStrapiResponse(articleData.data[0]);
+    const flattenedArticle = flattenStrapiResponse<ArticleData>(articleData.data[0]);
+
     if (!flattenedArticle) {
       return NextResponse.json({ message: 'Article not found' }, { status: 404 });
     }
-    flattenedArticle.comments = flattenStrapiResponse(commentsData.data);
+
+    flattenedArticle.comments = flattenStrapiResponse<Comment[]>(commentsData.data) ?? [];
 
     return NextResponse.json(flattenedArticle);
+
   } catch (error) {
     console.error('Single article fetch error:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });

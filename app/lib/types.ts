@@ -117,15 +117,24 @@ export interface ArticleData {
   publishedAt: string;
   excerpt: string | null;
   type: string | null;
-  comments: Comment[];
+  comments: Comment[] ;
   cover: Cover;
   author: Author;
   category: Category;
 }
 
+export interface Meta {
+  pagination: {
+    page: number;
+    pageSize: number;
+    pageCount: number;
+    total: number;
+  };
+}
+
 export interface ApiResponse {
   data: ArticleData;
-  meta: {};
+  meta: Meta;
 }
 
 

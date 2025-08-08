@@ -40,8 +40,6 @@ const nextConfig: NextConfig = {
         hostname: 'images.unsplash.com',
       },
     ],
-  }, eslint: {
-    ignoreDuringBuilds: true,
   },
   env: {
     NEXT_PUBLIC_STRAPI_URL: process.env.STRAPI_URL

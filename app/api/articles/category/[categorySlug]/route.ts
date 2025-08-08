@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ categorySlug: string }> }
 ) {
   const session = await getServerSession(authOptions);
 
@@ -15,7 +15,7 @@ export async function GET(
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const categorySlug = (await params).slug;
+  const categorySlug = (await params).categorySlug;
   const { searchParams } = new URL(req.url);
   const page = parseInt(searchParams.get('page') || '1', 10);
   const pageSize = parseInt(searchParams.get('pageSize') || '10', 10);
@@ -46,7 +46,6 @@ export async function GET(
     }
 
     const flattenedData = flattenStrapiResponse(data.data);
-
     return NextResponse.json({ data: flattenedData, meta: data.meta });
   } catch (error) {
     console.error('Error fetching paginated articles:', error);
