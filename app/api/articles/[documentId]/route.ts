@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
     const articleData = await articleRes.json();
     const commentsData = await commentsRes.json();
 
-   
+
 
     if (!articleRes.ok) {
       return NextResponse.json(
@@ -63,6 +63,9 @@ export async function GET(req: NextRequest) {
     }
 
     const flattenedArticle = flattenStrapiResponse(articleData.data[0]);
+    if (!flattenedArticle) {
+      return NextResponse.json({ message: 'Article not found' }, { status: 404 });
+    }
     flattenedArticle.comments = flattenStrapiResponse(commentsData.data);
 
     return NextResponse.json(flattenedArticle);

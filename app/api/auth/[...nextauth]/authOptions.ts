@@ -86,7 +86,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile, trigger }: { user: any; account: any; profile?: any; trigger?: string }) {
+    async signIn({ user, account, profile }: { user: any; account: any; profile?: any; }) {
 
       if (account?.provider === 'google' && profile?.email) {
         try {

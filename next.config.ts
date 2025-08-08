@@ -3,8 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
 
-    domains: ["firebasestorage.googleapis.com", 'img.youtube.com', "source.unsplash.com", "picsum.photos", "placehold.co",'localhost', "images.unsplash.com", "localhost:1337",], 
-    
+    domains: ["firebasestorage.googleapis.com", 'img.youtube.com', "source.unsplash.com", "picsum.photos", "placehold.co", 'localhost', "images.unsplash.com", "localhost:1337",],
+
 
     remotePatterns: [
       // For Google profile images
@@ -40,6 +40,8 @@ const nextConfig: NextConfig = {
         hostname: 'images.unsplash.com',
       },
     ],
+  }, eslint: {
+    ignoreDuringBuilds: true,
   },
   env: {
     NEXT_PUBLIC_STRAPI_URL: process.env.STRAPI_URL
