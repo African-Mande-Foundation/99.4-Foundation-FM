@@ -313,6 +313,21 @@ export default function Navbar() {
                 )}
             </div>
 
+            {/* Desktop right side - Language and Search */}
+            <div className="hidden lg:flex ml-auto items-center space-x-4 text-white">
+                {/* Language selector */}
+                <div className="flex items-center space-x-2">
+                    <span className="text-sm font-bold">EN</span>
+                    
+                </div>
+                <div className="w-px h-4 bg-white"></div>
+
+                {/* Search icon */}
+                <button className="hover:text-[#03A0B4] transition-colors">
+                    <Search className="w-5 h-5" />
+                </button>
+            </div>
+
             {/* Mobile layout */}
             <div className="lg:hidden flex items-center justify-between w-full px-4">
                 {/* Left side - Logo/Brand */}
@@ -325,8 +340,9 @@ export default function Navbar() {
                     {/* Language selector */}
                     <div className="flex items-center space-x-2 text-white">
                         <span className="text-sm font-bold">EN</span>
-                        <div className="w-px h-4 bg-white"></div>
+                        
                     </div>
+                    <div className="w-px h-4 bg-white"></div>
 
                     {/* Search icon */}
                     <button className="text-white hover:text-[#03A0B4] transition-colors">
@@ -347,19 +363,7 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* Desktop right side - Language and Search */}
-            <div className="hidden lg:flex ml-auto items-center space-x-4 text-white">
-                {/* Language selector */}
-                <div className="flex items-center space-x-2">
-                    <span className="text-sm font-bold">EN</span>
-                    <div className="w-px h-4 bg-white"></div>
-                </div>
-
-                {/* Search icon */}
-                <button className="hover:text-[#03A0B4] transition-colors">
-                    <Search className="w-5 h-5" />
-                </button>
-            </div>
+            
 
             {/* Mobile menu overlay */}
             {isMobileMenuOpen && (

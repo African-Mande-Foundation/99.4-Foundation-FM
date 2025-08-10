@@ -6,8 +6,7 @@ import Navbar from '../ui/Navbar';
 import Link from 'next/link';
 import { signIn, getSession } from "next-auth/react";
 import { useSession } from "next-auth/react";
-import { faGoogle } from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import { Eye, EyeOff } from 'lucide-react';
 import Image from 'next/image';
 import LoadingBar from '../ui/LoadingBar';

@@ -17,7 +17,7 @@ export default function PodcastCard ({
 }: PodcastCardProps) {
     return(
 <div
-            className="relative lg:w-[400px] lg:h-[225px] w-[350px] h-[250px] rounded overflow-hidden shadow-lg cursor-pointer transition-transform hover:scale-105 border-1 border-red-500"
+            className="relative lg:w-[400px] lg:h-[225px] w-[350px] h-[250px] rounded overflow-hidden shadow-lg cursor-pointer transition-transform hover:scale-105 border-0 border-red-500"
             onClick={onClick}
             tabIndex={-1}
         >

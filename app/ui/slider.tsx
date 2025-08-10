@@ -127,7 +127,7 @@ return (
               alt={slide.title}
              fill
              style={{ objectFit: 'cover' }}
-              className="z-0"
+              className="z-0 object-cover"
               priority
               draggable={false}
               quality={100}

@@ -21,7 +21,7 @@ const samplePrograms: CollectionProps[] = [
     channel: "SomaFM",
     url: "https://somafm.com/groovesalad/",
     followers: 1200,
-    streamLink: "https://fm939.wnyc.org/wnycfm.aac",
+    streamLink: "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service",
   },
   {
     id: 2,
@@ -30,7 +30,7 @@ const samplePrograms: CollectionProps[] = [
     channel: "BBC 88.1",
     url: "https://www.bbc.co.uk/sounds",
     followers: 2400,
-    streamLink: "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_two",
+    streamLink: "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service",
   },
   {
     id: 3,
@@ -39,7 +39,7 @@ const samplePrograms: CollectionProps[] = [
     channel: "BBC 100.1",
     url: "https://www.bbc.co.uk/sounds",
     followers: 1800,
-    streamLink: "https://stream.live.vc.bbcmedia.co.uk/bbc_1xtra",
+    streamLink: "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service",
   },
   {
     id: 4,
@@ -48,7 +48,7 @@ const samplePrograms: CollectionProps[] = [
     channel: "BBC 104.4",
     url: "https://www.bbc.co.uk/sounds",
     followers: 1600,
-    streamLink: "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_fourfm",
+    streamLink: "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service",
   },
   {
     id: 5,
@@ -57,7 +57,7 @@ const samplePrograms: CollectionProps[] = [
     channel: "Drone 128",
     url: "https://somafm.com/dronezone/",
     followers: 900,
-    streamLink: "https://ice4.somafm.com/dronezone-128-mp3",
+    streamLink: "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service",
   },
 ];
 
@@ -156,7 +156,7 @@ export default function Collection() {
                   <button
                     onClick={() => handlePlay(program)}
                     disabled={loadingStates[program.id]}
-                    className={`border rounded-md px-4 py-2 transition-all ${
+                    className={`border cursor-pointer rounded-md px-4 py-2 transition-all ${
                       currentPlayingId === program.id
                         ? "bg-red-600 text-white border-red-600"
                         : "text-cyan-300 border-cyan-400"

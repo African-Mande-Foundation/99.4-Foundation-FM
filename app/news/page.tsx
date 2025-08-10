@@ -97,10 +97,6 @@ const NewsPage = () => {
     return (
       <div className="min-h-screen bg-white text-gray-800 flex flex-col">
         <Navbar />
-        <ImageSlider />
-        <InfoCards />
-        <PeaceAndSocialIssues />
-        <CommunityHighlights />
 
 
 
@@ -128,7 +124,7 @@ const NewsPage = () => {
             </Link>
           </div>
         </div>
-        <RealVoicesComponent />
+        
 
         <Footer />
       </div>

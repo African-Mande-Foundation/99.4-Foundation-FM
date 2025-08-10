@@ -57,7 +57,7 @@ const nextRef = useRef<HTMLButtonElement | null>(null);
     <div className=" bg-[#0d0d0d] text-white py-12 px-4">
       <h2 className="text-3xl font-bold text-center mb-8">FEATURED PODCASTS</h2>
 
-      <div className="relative max-w-6xl border-red-600 border-0  min-h-[20rem]">
+      <div className="relative items-center justify-center flex max-w-6xl border-red-600 border-0  min-h-[20rem]">
         {/* Swiper with custom navigation */}
         <Swiper
         ref={swiperRef}
