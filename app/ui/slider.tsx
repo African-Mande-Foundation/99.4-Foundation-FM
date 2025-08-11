@@ -8,6 +8,7 @@ import Link from 'next/link';
 import {Search, SearchIcon} from 'lucide-react';
 import LanguageSearchBar from './searchbar';
 import Player from '@/app/ui/player';
+import {navigateToSection} from '@/app/ui/Navbar.tsx'
 
 const slides = [
   {
@@ -42,6 +43,26 @@ const transitionTypes = [
   'rowSlice',
   'squareSlice',
 ];
+
+ const navigateToSection = (sectionId: string) => {
+        // If we're on the main page, just scroll
+        if (window.location.pathname === '/') {
+            scrollToSection(sectionId);
+        } else {
+            // If we're on another page, navigate to main page with section parameter
+            router.push(`/?section=${sectionId}`);
+        }
+    };
+
+     const scrollToSection = (sectionId: string) => {
+        const element = document.getElementById(sectionId);
+        
+            element.scrollIntoView({ behavior: 'smooth' });
+       
+    };
+
+
+
 
 export default function HeroSlider() {
   const [current, setCurrent] = useState(0);
@@ -100,6 +121,8 @@ const getSlideAnimation = () => {
       return { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } };
   }
 };
+
+
 
  
 
@@ -221,7 +244,7 @@ return (
       )}
 
 
-      <div className='absolute flex items-center justify-between z-20 top-0 w-full border-0 border-red-500 h-25 bg-transparent'>
+      <div className='absolute flex items-center justify-between z-20 top-0 w-full border-0 border-red-500 pr-10 h-25 bg-transparent'>
         <Image
         src="https://firebasestorage.googleapis.com/v0/b/foundation-fm.firebasestorage.app/o/Foundation_FM_Media%2FIMG-20220323-WA0012.jpg?alt=media&token=181d64fc-c649-495a-95a9-1ff82a7643ee"
         alt='Logo'
@@ -257,8 +280,25 @@ return (
         </motion.div>
       </div>
 
+
+      <div className=" absolute bottom-1/2 lg:bottom-40 w-screen border-0 border-red-500 h-20 z-50">
+
+        <div className="relative w-full h-full flex items-center justify-center border-0 border-gray-300">
+
+          <button onClick={() => navigateToSection('podcasts')} transition="smooth"><div className="rounded-2xl border-2 border-white w-10 h-17 flex items-center justify-center cursor-pointer">
+
+            <div className="h-4 border-1 border-white mt-4 rounded-2xl"></div>
+            
+          </div></button>
+          
+        </div>
+
+        
+      </div>
+
+
       {/* Dot Navigation */}
-      <div className="absolute bottom-1/2 lg:bottom-25 left-1/2 transform -translate-x-1/2 z-50 flex gap-3">
+      <div className="absolute bottom-4/9 lg:bottom-25 left-1/2 transform -translate-x-1/2 z-50 flex gap-3">
         {slides.map((_, index) => (
           <button
             key={index}
@@ -267,8 +307,8 @@ return (
               setCurrent(index);
             }}
             className={classNames(
-              'w-3 h-3 rounded-full',
-              current === index ? 'bg-white' : 'bg-gray-400'
+              'w-4 h-4 rounded-full border-2 border-white',
+              current === index ? 'bg-white' : 'bg-none'
             )}
           />
         ))}

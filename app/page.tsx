@@ -20,18 +20,16 @@ export default function Home() {
       <div id="home" className="flex h-screen border-amber-400 border-0 ">
         <HeroSlider/>
         
-      </div>
-      <div className="flex flex-col min-h-screen border-red-600 border-0 bg-[#1b1b1b]">
-        <Navbar/>
-        <div id="podcasts" className="flex flex-col p-4 pt-6 md:pt-10 lg:px-20 xl:px-45 items-center justify-center w-full border-green-600 border-0">
-          <div className="w-full px-3 mb-6">
-            <p className="text-xs text-center text-[#828282]">Listen to top stories, voices, and music on 99.4 Foundation FM</p>
-          </div>
-          <div className="w-full md:w-2/3 lg:w-1/2 flex items-center mb-10 justify-around ">
-            <div className="w-1/2 h-0 border-t-1 border-[#828282]"/>
-            <Mic className="text-[#828282] mx-2"/>
-            <div className="w-1/2 h-0 border-t-1 border-[#828282]"/>
-          </div>
+      </div> <div className="flex flex-col min-h-screen border-red-600
+      border-0 bg-[#1b1b1b]"> <Navbar/> <div id="podcasts" className="flex
+      flex-col p-4 pt-6 md:pt-10 lg:px-20 xl:px-45 items-center
+      justify-center w-full border-green-600 border-0"> <div
+      className="w-full px-3 mb-6"> <p className="text-xs text-center text-
+      [#828282]">Listen to top stories, voices, and music on 99.4 Foundation
+      FM</p> </div> <div className="w-full md:w-2/3 lg:w-1/2 flex
+      items-center mb-10 justify-around "> <div className="w-1/2 h-0
+      border-t-1 border-[#828282]"/> <Mic className="text-[#828282] mx-2"/>
+      <div className="w-1/2 h-0 border-t-1 border-[#828282]"/> </div>
          
         <div className="flex flex-col w-full border-0 border-amber-400">
           <Podcasts/>

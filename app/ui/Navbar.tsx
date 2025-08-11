@@ -107,7 +107,7 @@ export default function Navbar() {
         setShowMobilePagesDropdown(false);
     };
 
-    const navigateToSection = (sectionId: string) => {
+ const navigateToSection = (sectionId: string) => {
         // If we're on the main page, just scroll
         if (window.location.pathname === '/') {
             scrollToSection(sectionId);
@@ -314,18 +314,10 @@ export default function Navbar() {
             </div>
 
             {/* Desktop right side - Language and Search */}
-            <div className="hidden lg:flex ml-auto items-center space-x-4 text-white">
-                {/* Language selector */}
-                <div className="flex items-center space-x-2">
-                    <span className="text-sm font-bold">EN</span>
-                    
-                </div>
-                <div className="w-px h-4 bg-white"></div>
+            <div className="hidden lg:flex ml-auto h-auto">
 
-                {/* Search icon */}
-                <button className="hover:text-[#03A0B4] transition-colors">
-                    <Search className="w-5 h-5" />
-                </button>
+                <LanguageSearchBar/>
+               
             </div>
 
             {/* Mobile layout */}
@@ -338,16 +330,8 @@ export default function Navbar() {
                 {/* Right side - Search, Language, and Menu */}
                 <div className="flex items-center space-x-4">
                     {/* Language selector */}
-                    <div className="flex items-center space-x-2 text-white">
-                        <span className="text-sm font-bold">EN</span>
-                        
-                    </div>
-                    <div className="w-px h-4 bg-white"></div>
-
-                    {/* Search icon */}
-                    <button className="text-white hover:text-[#03A0B4] transition-colors">
-                        <Search className="w-5 h-5" />
-                    </button>
+                   
+                   <LanguageSearchBar/>
 
                     {/* Mobile menu button */}
                     <button
@@ -367,7 +351,7 @@ export default function Navbar() {
 
             {/* Mobile menu overlay */}
             {isMobileMenuOpen && (
-                <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40" onClick={() => setIsMobileMenuOpen(false)}>
+                <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-60" onClick={() => setIsMobileMenuOpen(false)}>
                     <div className="absolute top-16 left-0 right-0 bg-black border-t border-gray-700" onClick={(e) => e.stopPropagation()}>
                         <div className="px-4 py-6 space-y-4">
                             {/* Home with dropdown */}

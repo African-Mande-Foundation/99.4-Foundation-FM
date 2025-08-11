@@ -50,35 +50,51 @@ export default function LanguageSearchBar({
   };
 
   return (
-    <div className="relative flex items-center justify-between pr-4 space-x-4 text-white z-50">
+    <div className="relative flex items-center justify-center  h-16 w-20 ">
+    <div className="absolute z-20 w-20 flex items-center justify-end mb-1 space-x-4 text-white z-50">
       {/* Language Toggle */}
+      <div className="flex items-center space-x-2">
       <button
         onClick={toggleLanguage}
-        className="p-2 border-r-2 border-white hover:cursor-pointer focus:outline-none"
+        className="text-base font-bold"
         aria-label="Toggle language"
       >
         {nextLangLabel}
       </button>
+      </div>
+
+      <div className="w-px h-5 bg-white"></div>
 
       {/* Search Icon with Click */}
-      <div className="relative">
-        <button onClick={toggleSearchBar} aria-label="Toggle Search Bar">
-          <Search className="cursor-pointer w-5 h-5" />
+      
+        <button onClick={toggleSearchBar}
+        className="hover:text-[#03A0B4] transition-colors" aria-label="Toggle Search Bar">
+          <Search className="cursor-pointer  w-5 h-5" />
         </button>
 
-        {showSearch && (
+       
+
+        
+      
+    </div>
+
+    {showSearch && (
+      <div className="absolute top-20 z-20 right-0 h-14 w-50 bg-[#0d0d0d]">
+        <div className="relative w-full h-full flex items-center justify-center">
           <input
             type="text"
             placeholder={translations[language].search}
-            className="absolute top-7 right-0 mt-1 p-1 w-40 border border-gray-300 rounded-md text-black"
+            className="  w-45 text-white border-b-1 text-black outline-none"
             dir={language === 'ar' ? 'rtl' : 'ltr'}
             value={searchValue}
             onChange={handleSearchChange}
             onKeyDown={handleSearchKeyDown}
-            autoFocus
+            
           />
+          </div>
+          </div>
         )}
-      </div>
+     
     </div>
   );
 }
