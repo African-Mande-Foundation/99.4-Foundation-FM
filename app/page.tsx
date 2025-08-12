@@ -80,7 +80,7 @@ export default function Home() {
             </div>
             <div className="flex flex-col items-start justify-center gap-4 mb-8 md:w-1/2">
               <p className="text-justify text-white text-sm lg:text-base">
-                At Africano Mande Foundation, our programs and initiatives are designed to respond to the real needs of the communities we serve From health outreach and education support to youth empowerment, media, and sustainable livelihoods, each initiative is built on inclusivity, collaboration, and long-term impact. Explore our ongoing efforts and discover how we're turning ideas into action.
+                At Africano Mande Foundation, our programs and initiatives are designed to respond to the real needs of the communities we serve From health outreach and education support to youth empowerment, media, and sustainable livelihoods, each initiative is built on inclusivity, collaboration, and long-term impact. Explore our ongoing efforts and discover how we&apos;re turning ideas into action.
               </p>
               <Link href="" className="">
               <button className="px-4 py-2 bg-[#03A0B4] text-white text-xs md:text-sm lg:text-base rounded cursor-pointer">

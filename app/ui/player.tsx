@@ -37,9 +37,7 @@ export default function Player(){
         if(!audio) return;
 
         audio.src = playlist[currentSongIndex].url;
-        if (isPlaying) {
-            audio.play();
-        } 
+        
     },[currentSongIndex]);
 
     useEffect(() => {

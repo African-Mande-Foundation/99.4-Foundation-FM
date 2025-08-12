@@ -123,9 +123,19 @@ export interface ArticleData {
   category: Category;
 }
 
+export interface Meta {
+  pagination: {
+    page: number;
+    pageSize: number;
+    pageCount: number;
+    total: number;
+  };
+}
+
+
 export interface ApiResponse {
   data: ArticleData;
-  meta: {};
+  meta: Meta;
 }
 
 

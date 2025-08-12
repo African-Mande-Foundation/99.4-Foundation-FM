@@ -1,6 +1,7 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
+import type { Account, Profile, User } from 'next-auth';
 
 declare module 'next-auth' {
   interface User {
@@ -86,7 +87,15 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile, trigger }: { user: any; account: any; profile?: any; trigger?: string }) {
+        async signIn({
+      user,
+      account,
+      profile
+    }: {
+      user: User & { jwt?: string };
+      account: (Account & { access_token?: string }) | null;
+      profile?: Profile & { picture?: string };
+    }) {
 
       if (account?.provider === 'google' && profile?.email) {
         try {

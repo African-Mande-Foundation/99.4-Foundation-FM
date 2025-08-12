@@ -1,7 +1,7 @@
 "use client";
 
 import { Pause, Play, Volume2 } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 
 type CollectionProps = {
   id: number;

@@ -1,9 +1,10 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide, SwiperRef } from "swiper/react";
 import { Navigation,  Autoplay } from "swiper/modules";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import type { NavigationOptions } from "swiper/types";
 import "swiper/css";
 import "swiper/css/navigation";
 
@@ -36,28 +37,31 @@ function cn(...classes: (string | boolean | undefined)[]) {
 
 export default function Podcasts() {
   const prevRef = useRef<HTMLButtonElement | null>(null);
-const nextRef = useRef<HTMLButtonElement | null>(null);
 
-  const swiperRef = useRef<any>(null);
+  const nextRef = useRef<HTMLButtonElement | null>(null);
+  const swiperRef = useRef<SwiperRef | null>(null);
 
   useEffect(() => {
     if (
-      swiperRef.current &&
-      swiperRef.current.params &&
-      swiperRef.current.params.navigation
+      swiperRef.current?.swiper &&
+      swiperRef.current.swiper.params.navigation &&
+      typeof swiperRef.current.swiper.params.navigation !== "boolean"
     ) {
-      swiperRef.current.params.navigation.prevEl = prevRef.current;
-      swiperRef.current.params.navigation.nextEl = nextRef.current;
-      swiperRef.current.navigation.init();
-      swiperRef.current.navigation.update();
+      const navigation = swiperRef.current.swiper.params
+        .navigation as NavigationOptions;
+      navigation.prevEl = prevRef.current;
+      navigation.nextEl = nextRef.current;
+
+      swiperRef.current.swiper.navigation.init();
+      swiperRef.current.swiper.navigation.update();
     }
   }, []);
 
   return (
-    <div className=" bg-[#0d0d0d] text-white py-12 px-4">
+    <div className=" bg-[#0d0d0d] w-full items-center justify-center flex flex-col text-white py-12 px-4">
       <h2 className="text-3xl font-bold text-center mb-8">FEATURED PODCASTS</h2>
 
-      <div className="relative items-center justify-center flex max-w-6xl border-red-600 border-0  min-h-[20rem]">
+      <div className="relative w-full  max-w-6xl border-red-600 border-0  min-h-[20rem]">
         {/* Swiper with custom navigation */}
         <Swiper
         ref={swiperRef}

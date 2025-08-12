@@ -39,7 +39,7 @@ const CommentList = ({
       } else {
         console.error(data.message || 'Failed to load replies');
       }
-    } catch (err) {
+    } catch {
       console.error('An error occurred while loading replies');
     } finally {
       setLoadingReplies((prev) => ({ ...prev, [commentId]: false }));

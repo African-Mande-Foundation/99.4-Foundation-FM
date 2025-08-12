@@ -3,15 +3,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from "../../../auth/[...nextauth]/authOptions";
 
-export async function GET(req: NextRequest, context: { params: { commentId: string } }) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ commentId: string }> }
+) {
   const session = await getServerSession(authOptions);
 
   if (!session || !session.jwt) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const { params } = await context;
-  const { commentId } = params;
+  
+  const { commentId } = await params;
 
   try {
     const strapiRes = await fetch(

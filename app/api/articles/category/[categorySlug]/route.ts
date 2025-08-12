@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { categorySlug: string } }
+  { params }: { params: Promise<{ categorySlug: string }> }
 ) {
   const session = await getServerSession(authOptions);
 
@@ -15,7 +15,7 @@ export async function GET(
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const { categorySlug } = params;
+  const  categorySlug  = (await params).categorySlug;
   const { searchParams } = new URL(req.url);
   const page = parseInt(searchParams.get('page') || '1', 10);
   const pageSize = parseInt(searchParams.get('pageSize') || '10', 10);

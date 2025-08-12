@@ -1,7 +1,6 @@
 import Navbar from "../ui/Navbar";
 import Footer from "../ui/Footer";
 import Image from "next/image";
-import { Triangle } from "lucide-react";
 
 export default function InitiativesPage() {
   return (
@@ -37,7 +36,7 @@ export default function InitiativesPage() {
            }}>
         <div className="max-w-4xl mx-auto">
           <p className="text-white text-center text-lg leading-relaxed">
-            At 99.4 Foundation FM, we believe that radio is more than sound, it's a tool for transformation. 
+            At 99.4 Foundation FM, we believe that radio is more than sound, it&apos;s a tool for transformation. 
             Our initiatives are designed to inform, inspire, and empower communities across South Sudan. 
             Through every broadcast, partnership, and outreach program, we bring real stories to life and 
             amplify voices that matter.
@@ -80,10 +79,10 @@ export default function InitiativesPage() {
 
             {/* Women's Voices Rising */}
             <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">WOMEN'S VOICES RISING</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">WOMEN&apos;S VOICES RISING</h3>
               <p className="text-gray-600 leading-relaxed">
                 Amplifying the stories and experiences of women in South Sudan, providing platforms 
-                for female voices to be heard and creating opportunities for women's leadership.
+                for female voices to be heard and creating opportunities for women&apos;s leadership.
               </p>
             </div>
 

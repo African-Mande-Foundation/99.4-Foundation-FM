@@ -23,7 +23,7 @@ const NewsPage = () => {
   const [authors, setAuthors] = useState<Author[]>([]);
   const [recentComments, setRecentComments] = useState<RecentComment[]>([]);
   const [error, setError] = useState('');
-  const [selectedAuthor, setSelectedAuthor] = useState<string | null>(null);
+  
   const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -64,7 +64,7 @@ const NewsPage = () => {
             if (!res.ok) throw new Error('Photo update failed');
 
             localStorage.removeItem('googleRegistration');
-          } catch (err) {
+          } catch {
             console.error('Failed to update photo in Strapi');
           }
         }
@@ -79,9 +79,7 @@ const NewsPage = () => {
   }, [status, session]);
 
 
-  const handleAuthorClick = (authorId: string | null) => {
-    setSelectedAuthor(authorId);
-  };
+
 
   if (status === 'loading') {
     return (
@@ -156,7 +154,6 @@ const NewsPage = () => {
               categories={categories}
               authors={authors}
               recentComments={recentComments}
-              onAuthorClick={handleAuthorClick}
               isLoading={isLoading}
             />
           </div>

@@ -15,7 +15,6 @@ interface SidebarProps {
   categories: Category[];
   authors: Author[];
   recentComments: RecentComment[];
-  onAuthorClick: (authorId: string | null) => void;
   isLoading: boolean;
 }
 
@@ -23,7 +22,6 @@ const Sidebar = ({
   categories,
   authors,
   recentComments,
-  onAuthorClick,
   isLoading,
 }: SidebarProps) => {
   return (
@@ -37,7 +35,7 @@ const Sidebar = ({
       {isLoading ? (
         <AuthorsSkeleton />
       ) : (
-        <Authors authors={authors} onAuthorClick={onAuthorClick} />
+        <Authors authors={authors} />
       )}
 
       <SocialMedia />

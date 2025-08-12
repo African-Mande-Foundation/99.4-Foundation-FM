@@ -6,10 +6,9 @@ import { Author } from '@/app/lib/types';
 
 interface AuthorsProps {
   authors: Author[];
-  onAuthorClick: (authorId: string | null) => void;
 }
 
-const Authors = ({ authors, onAuthorClick }: AuthorsProps) => {
+const Authors = ({ authors }: AuthorsProps) => {
   if (!authors) {
     return <p className="col-span-full text-center text-gray-600">No authors found</p>;
   }
@@ -20,7 +19,6 @@ const Authors = ({ authors, onAuthorClick }: AuthorsProps) => {
         {authors.map((author) => (
           <button
             key={author.id}
-            onClick={() => onAuthorClick(author.documentId)}
             className="flex items-center w-full text-left px-4 py-3 l text-gray-800 hover:bg-gray-100 transition-colors "
           >
             {author.avatar && (

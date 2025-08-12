@@ -51,7 +51,7 @@ const CommentForm = ({ articleId, userId, parentId, onCommentPosted, onCancelRep
       } else {
         setError(data.message || 'Failed to post comment');
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred while posting comment');
     } finally {
       setIsLoading(false);

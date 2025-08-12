@@ -5,10 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import classNames from 'classnames';
 import Link from 'next/link';
-import {Search, SearchIcon} from 'lucide-react';
+
 import LanguageSearchBar from './searchbar';
 import Player from '@/app/ui/player';
-import {navigateToSection} from '@/app/ui/Navbar.tsx'
+import router from 'next/router';
+
+
 
 const slides = [
   {
@@ -57,8 +59,9 @@ const transitionTypes = [
      const scrollToSection = (sectionId: string) => {
         const element = document.getElementById(sectionId);
         
-            element.scrollIntoView({ behavior: 'smooth' });
-       
+              if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+              }
     };
 
 
@@ -285,7 +288,7 @@ return (
 
         <div className="relative w-full h-full flex items-center justify-center border-0 border-gray-300">
 
-          <button onClick={() => navigateToSection('podcasts')} transition="smooth"><div className="rounded-2xl border-2 border-white w-10 h-17 flex items-center justify-center cursor-pointer">
+          <button onClick={() => navigateToSection('podcasts')} style={{transition: 'smooth'}}><div className="rounded-2xl border-2 border-white w-10 h-17 flex items-center justify-center cursor-pointer">
 
             <div className="h-4 border-1 border-white mt-4 rounded-2xl"></div>
             

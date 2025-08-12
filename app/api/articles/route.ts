@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from "../auth/[...nextauth]/authOptions"
 import { flattenStrapiResponse } from '@/app/lib/utils';
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const session = await getServerSession(authOptions);
 
   if (!session || !session.jwt) {
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
     );
 
     const data = await strapiRes.json();
-    console.log(data)
+  
     if (!strapiRes.ok) {
       return NextResponse.json(
         { message: data.error?.message || 'Failed to fetch articles' },
@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
     }
 
     const flattenedData = flattenStrapiResponse(data.data);
-    console.log(flattenedData)
+    
     return NextResponse.json(flattenedData);
   } catch (error) {
     console.error('Article fetch error:', error);

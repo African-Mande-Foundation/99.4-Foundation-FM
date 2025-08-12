@@ -18,7 +18,7 @@ const CategoryPage = () => {
   const [pageCount, setPageCount] = useState(1);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const params = useParams();
   const categorySlug = params.categorySlug as string;
   const router = useRouter();
@@ -39,7 +39,7 @@ const CategoryPage = () => {
         } else {
           setError(data.message || 'Failed to load articles');
         }
-      } catch (err) {
+      } catch {
         setError('An error occurred while loading articles');
       }
       setIsLoading(false);

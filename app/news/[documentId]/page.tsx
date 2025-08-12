@@ -1,16 +1,14 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import Navbar from '@/app/ui/Navbar';
 import Footer from '@/app/ui/Footer';
-import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { ArticleData } from '@/app/lib/types';
 import ArticleHeader from './components/ArticleHeader';
 import ArticleBody from './components/ArticleBody';
-import CommentForm from './components/CommentForm';
 import CommentList from './components/CommentList';
 import LoadingBar from '@/app/ui/LoadingBar';
 
@@ -24,7 +22,7 @@ export default function ArticlePage() {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const fetchArticle = async () => {
+  const fetchArticle = useCallback(async () => {
     try {
       const res = await fetch(`/api/articles/${documentId}`);
       const data = await res.json();
@@ -33,29 +31,22 @@ export default function ArticlePage() {
       } else {
         setError(data.message || 'Failed to load article');
       }
-    } catch (err) {
+    } catch  {
       setError('An error occurred while loading the article');
     } finally {
       setLoading(false);
     }
-  };
+  }, [documentId]);
 
   useEffect(() => {
     fetchArticle();
-  }, [documentId]);
+  }, [fetchArticle]);
 
   const handleCommentPosted = () => {
     setParentCommentId(null);
     fetchArticle();
   };
 
-  const handleReplyClick = (commentId: string) => {
-    if (!session) {
-      setError('You must be logged in to reply to a comment');
-      return;
-    }
-    setParentCommentId(commentId);
-  };
 
   if (loading) {
     return (
