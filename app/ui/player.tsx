@@ -1,7 +1,7 @@
 "use client";
 
 
-import{useRef, useState, useEffect} from 'react';
+import{useRef, useState, useEffect, useCallback} from 'react';
 import {Pause, Play, SkipBack, SkipForward, Volume2, VolumeX} from 'lucide-react';
 
 
@@ -22,13 +22,13 @@ export default function Player(){
     const [isMuted, setIsMuted] = useState(false);
     const audioRef = useRef<HTMLAudioElement>(null);
 
-        const playNextSong = () => {
+        const playNextSong = useCallback(() => {
         setCurrentSongIndex((prev)=> {
             const nextIndex = (prev + 1) % playlist.length;
             return nextIndex;
         });
         setIsPlaying(true);
-    }
+    }, [playlist.length]);
       useEffect(() => {
     const fetchSongs = async () => {
       try {

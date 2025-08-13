@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Swiper, SwiperSlide, SwiperRef } from "swiper/react";
 import { Navigation,  Autoplay } from "swiper/modules";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -10,26 +10,12 @@ import "swiper/css/navigation";
 
 import PodcastCard from "./podcastcard";
 
-const samplePodcasts = [
-  {
-    id: 1,
-    title: "Emmanuel Kembe",
-    thumbnailUrl: "https://img.youtube.com/vi/hZ2Zi7nfCd0/sddefault.jpg",
-    youtubeUrl: "https://www.youtube.com/watch?v=hZ2Zi7nfCd0&pp=ygUIcG9kY2FzdHM%3D",
-  },
-  {
-    id: 2,
-    title: "Single Dee",
-    thumbnailUrl: "https://img.youtube.com/vi/iB4SsbmuTDc/sddefault.jpg",
-    youtubeUrl: "https://www.youtube.com/watch?v=iB4SsbmuTDc&pp=ygUIcG9kY2FzdHPSBwkJxwkBhyohjO8%3D",
-  },
-  {
-    id: 3,
-    title: "vee",
-    thumbnailUrl: "https://img.youtube.com/vi/uGPwswAvV2s/sddefault.jpg",
-    youtubeUrl: "https://www.youtube.com/watch?v=uGPwswAvV2s&pp=ygUIcG9kY2FzdHM%3D",
-  },
-];
+type Podcast = {
+  id: number;
+  title: string;
+  thumbnailUrl: string;
+  youtubeUrl: string;
+};
 
 function cn(...classes: (string | boolean | undefined)[]) {
   return classes.filter(Boolean).join(" ");
@@ -40,6 +26,21 @@ export default function Podcasts() {
 
   const nextRef = useRef<HTMLButtonElement | null>(null);
   const swiperRef = useRef<SwiperRef | null>(null);
+  const [podcasts, setPodcasts] = useState<Podcast[]>([]);
+
+useEffect(() => {
+  fetch("/api/podcasts")
+    .then((res) => res.json())
+    .then((data) => {
+      if (Array.isArray(data)) {
+        setPodcasts(data);
+      } else {
+        console.error("Podcasts API returned unexpected format:", data);
+        setPodcasts([]);
+      }
+    })
+    .catch((err) => console.error(err));
+}, []);
 
   useEffect(() => {
     if (
@@ -79,7 +80,7 @@ export default function Podcasts() {
             nextEl: nextRef.current,
           }}
          onBeforeInit={(swiper) => {
-  // Type-safe guard: only assign if navigation is an object
+ 
   const navigation = swiper.params.navigation;
 
   if (navigation && typeof navigation !== "boolean") {
@@ -101,7 +102,7 @@ touchStartPreventDefault={false}
   className="border-0 border-green-500 h-[300px] flex items-center justify-center p-4"
 
         >
-          {samplePodcasts.map((podcast) => (
+          {podcasts.map((podcast) => (
             <SwiperSlide key={podcast.id} tabIndex={-1} >
                 {({ isActive, isPrev, isNext }) => (
     <div

@@ -15,7 +15,7 @@ export async function GET() {
   try {
     const res = await fetch(`${process.env.STRAPI_URL}/api/website-songs?populate=songs`, {
       headers: {
-        Authorization: `Bearer ${process.env.STRAPI_TOKEN}`, // Remove if public
+        Authorization: `Bearer ${process.env.STRAPI_TOKEN}`,
       },
       cache: "no-store",
     });
@@ -26,7 +26,6 @@ export async function GET() {
 
     const data = await res.json();
 
-    // Map Strapi's structure to the Song type you use in Player.tsx
 const songs = (data.data as StrapiSong[]).map((item) => ({
   id: item.id,
   title: item.title,
