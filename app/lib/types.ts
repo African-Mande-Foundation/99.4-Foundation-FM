@@ -106,11 +106,13 @@ export interface Category {
   cover: Cover;
 }
 
+type CKEditorHTML = string;
+
 export interface ArticleData {
   id: number;
   documentId: string;
   title: string;
-  description: string;
+  description: CKEditorHTML;
   slug: string;
   createdAt: string;
   updatedAt: string;
