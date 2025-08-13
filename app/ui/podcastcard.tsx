@@ -1,18 +1,17 @@
 
-import Image from "next/image"
+import Image from "next/image";
+
 
 
 type PodcastCardProps = {
     title:string;
     thumbnailUrl:string;
-    youtubeUrl:string;
     onClick?: () => void;
 }
 
 export default function PodcastCard ({
     title,
     thumbnailUrl,
-    youtubeUrl,
     onClick,
 }: PodcastCardProps) {
     return(

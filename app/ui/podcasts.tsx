@@ -116,7 +116,6 @@ touchStartPreventDefault={false}
               <PodcastCard
                 title={podcast.title}
                 thumbnailUrl={podcast.thumbnailUrl}
-                youtubeUrl={podcast.youtubeUrl}
                 onClick={() => window.open(podcast.youtubeUrl, "_blank")}
               />
               </div>)}

@@ -4,41 +4,51 @@
 import{useRef, useState, useEffect} from 'react';
 import {Pause, Play, SkipBack, SkipForward, Volume2, VolumeX} from 'lucide-react';
 
-const playlist = [
-    {
-        title: 'Song One',
-        desc: 'Description of Music',
-        url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
-    },
-    {
-        title: 'Song Two',
-        desc: 'Description of Music',
-        url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'
-    },
-    {
-        title: 'Song Three',
-        desc: 'Description of Music',
-        url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'
-    }
-    
-];
+
+type Song = {
+  id: number;
+  title: string;
+  desc: string;
+  url: string;
+};
 
 
 export default function Player(){
+    const [playlist, setPlaylist] = useState<Song[]>([]);
     const [currentSongIndex, setCurrentSongIndex] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
     const [duration, setDuration] = useState(0);
     const [isMuted, setIsMuted] = useState(false);
     const audioRef = useRef<HTMLAudioElement>(null);
-    
-    useEffect(() => {
-        const audio = audioRef.current;
-        if(!audio) return;
 
-        audio.src = playlist[currentSongIndex].url;
-        
-    },[currentSongIndex]);
+        const playNextSong = () => {
+        setCurrentSongIndex((prev)=> {
+            const nextIndex = (prev + 1) % playlist.length;
+            return nextIndex;
+        });
+        setIsPlaying(true);
+    }
+      useEffect(() => {
+    const fetchSongs = async () => {
+      try {
+        const res = await fetch("/api/songs");
+        if (!res.ok) throw new Error("Failed to fetch songs");
+        const songs = await res.json();
+        setPlaylist(songs);
+      } catch (error) {
+        console.error("Error fetching songs:", error);
+      }
+    };
+    fetchSongs();
+  }, []);
+    
+  useEffect(() => {
+  const audio = audioRef.current;
+  if (!audio || playlist.length === 0) return;
+
+  audio.src = playlist[currentSongIndex].url;
+}, [currentSongIndex, playlist]);
 
     useEffect(() => {
         const audio =audioRef.current;
@@ -78,7 +88,7 @@ export default function Player(){
             audio.removeEventListener('loadedmetadata', handleLoadedMetaData);
             audio.removeEventListener('ended',handleEnded);
         };
-    },[]);
+    },[playNextSong]);
 
 
     const skipForward =() => {
@@ -91,13 +101,7 @@ export default function Player(){
         setProgress(0);
     };
 
-    const playNextSong = () => {
-        setCurrentSongIndex((prev)=> {
-            const nextIndex = (prev + 1) % playlist.length;
-            return nextIndex;
-        });
-        setIsPlaying(true);
-    }
+
 
 
 
