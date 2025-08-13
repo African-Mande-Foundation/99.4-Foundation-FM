@@ -12,11 +12,6 @@ export interface User {
   photoUrl: string | null;
 }
 
-export interface Reaction {
-  count: number;
-  user_ids: string[];
-}
-
 export interface ParentComment {
   id: number;
   documentId: string;
@@ -24,8 +19,6 @@ export interface ParentComment {
   updatedAt: string;
   publishedAt: string;
   Content: string;
-  likes: Reaction | null;
-  dislikes: Reaction | null;
 }
 
 export interface Comment {
@@ -35,12 +28,13 @@ export interface Comment {
   updatedAt: string;
   publishedAt: string;
   Content: string;
-  likes: Reaction | null;
-  dislikes: Reaction | null;
   replies: Comment[];
   user: User;
   parent: ParentComment | null;
   repliesCount: number;
+  likesCount: number;
+  dislikesCount: number;
+  currentUserReaction: 'like' | 'dislike' | null;
 }
 
 export interface ImageFormat {

@@ -42,7 +42,7 @@ const ArticleGrid = ({ articles }: ArticleGridProps) => {
 
               {/* Content */}
               <div className="p-5 space-y-2">
-                <h2 className="text-2xl font-bold text-gray-800 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                <h2 className="text-2xl font-bold text-gray-800 line-clamp-2 group-hover:text-[#026C79] transition-colors">
                   {article.title}
                 </h2>
 
