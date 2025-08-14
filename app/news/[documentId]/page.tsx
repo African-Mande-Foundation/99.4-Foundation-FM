@@ -1,23 +1,22 @@
+"use client";
 
-'use client';
-
-import { useEffect, useState, useCallback } from 'react';
-import { useSession } from 'next-auth/react';
-import Navbar from '@/app/ui/Navbar';
-import Footer from '@/app/ui/Footer';
-import { useParams, useRouter } from 'next/navigation';
-import { ArticleData } from '@/app/lib/types';
-import ArticleHeader from './components/ArticleHeader';
-import ArticleBody from './components/ArticleBody';
-import CommentList from './components/CommentList';
-import LoadingBar from '@/app/ui/LoadingBar';
+import { useEffect, useState, useCallback } from "react";
+import { useSession } from "next-auth/react";
+import Navbar from "@/app/ui/Navbar";
+import Footer from "@/app/ui/Footer";
+import { useParams, useRouter } from "next/navigation";
+import { ArticleData } from "@/app/lib/types";
+import ArticleHeader from "./components/ArticleHeader";
+import ArticleBody from "./components/ArticleBody";
+import CommentList from "./components/CommentList";
+import LoadingBar from "@/app/ui/LoadingBar";
 
 export default function ArticlePage() {
   const params = useParams<{ documentId: string }>();
   const { documentId } = params;
   const [article, setArticle] = useState<ArticleData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [parentCommentId, setParentCommentId] = useState<string | null>(null);
   const { data: session } = useSession();
   const router = useRouter();
@@ -29,10 +28,10 @@ export default function ArticlePage() {
       if (res.ok) {
         setArticle(data);
       } else {
-        setError(data.message || 'Failed to load article');
+        setError(data.message || "Failed to load article");
       }
-    } catch  {
-      setError('An error occurred while loading the article');
+    } catch {
+      setError("An error occurred while loading the article");
     } finally {
       setLoading(false);
     }
@@ -47,7 +46,6 @@ export default function ArticlePage() {
     fetchArticle();
   };
 
-
   if (loading) {
     return (
       <>
@@ -55,7 +53,7 @@ export default function ArticlePage() {
         <LoadingBar />;
         <Footer />
       </>
-    )
+    );
   }
 
   if (error) {
@@ -78,14 +76,16 @@ export default function ArticlePage() {
     <div className="min-h-screen bg-white text-gray-800">
       <Navbar />
       <div className="pt-20 px-4 lg:px-20 xl:px-45 max-w-6xl mx-auto py-8">
-        <button onClick={() => router.back()} className="mb-4 text-blue-500 hover:underline">
+        <button
+          onClick={() => router.back()}
+          className="mb-4 text-[#026C79] hover:underline"
+        >
           &larr; Back
         </button>
         <ArticleHeader article={article} />
         <ArticleBody article={article} />
 
         <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">Comments</h2>
           <CommentList
             comments={article.comments}
             articleId={documentId}
@@ -100,4 +100,3 @@ export default function ArticlePage() {
     </div>
   );
 }
-
