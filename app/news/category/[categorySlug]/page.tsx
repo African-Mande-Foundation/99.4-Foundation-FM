@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { useParams , useRouter} from 'next/navigation';
-import Navbar from '@/app/ui/Navbar';
-import Footer from '@/app/ui/Footer';
-import ArticleGrid from '@/app/news/components/ArticleGrid';
-import LoadingBar from '@/app/ui/LoadingBar';
-import { Article } from '@/app/lib/types';
-import ArticleGridSkeleton from '../../components/Skeletons/ArticleGrid';
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useParams, useRouter } from "next/navigation";
+import Navbar from "@/app/ui/Navbar";
+import Footer from "@/app/ui/Footer";
+import ArticleGrid from "@/app/news/components/ArticleGrid";
+import LoadingBar from "@/app/ui/LoadingBar";
+import { Article } from "@/app/lib/types";
+import ArticleGridSkeleton from "../../components/Skeletons/ArticleGrid";
 
 const PAGE_SIZE = 10;
 
@@ -16,7 +16,7 @@ const CategoryPage = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(1);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { status } = useSession();
   const params = useParams();
@@ -24,23 +24,23 @@ const CategoryPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (status !== 'authenticated' || !categorySlug) return;
+    if (status !== "authenticated" || !categorySlug) return;
 
     const fetchArticlesByCategory = async () => {
       setIsLoading(true);
       try {
         const res = await fetch(
-          `/api/articles/category/${categorySlug}?page=${page}&pageSize=${PAGE_SIZE}`
+          `/api/articles/category/${categorySlug}?page=${page}&pageSize=${PAGE_SIZE}`,
         );
         const data = await res.json();
         if (res.ok) {
           setArticles(data.data);
           setPageCount(data.meta.pagination.pageCount);
         } else {
-          setError(data.message || 'Failed to load articles');
+          setError(data.message || "Failed to load articles");
         }
       } catch {
-        setError('An error occurred while loading articles');
+        setError("An error occurred while loading articles");
       }
       setIsLoading(false);
     };
@@ -48,7 +48,7 @@ const CategoryPage = () => {
     fetchArticlesByCategory();
   }, [status, categorySlug, page]);
 
-  if (status === 'loading') {
+  if (status === "loading") {
     return (
       <>
         <Navbar />
@@ -62,7 +62,10 @@ const CategoryPage = () => {
     <div className="min-h-screen bg-white text-gray-800">
       <Navbar />
       <div className="pt-20 px-4 sm:px-8 lg:px-16 xl:px-24 2xl:px-32 w-full mx-auto py-8">
-        <button onClick={() => router.back()} className="mb-4 text-blue-500 hover:underline">
+        <button
+          onClick={() => router.back()}
+          className="mb-4 text-[#026C79] hover:underline"
+        >
           &larr; Back
         </button>
         <h1 className="text-4xl font-bold mb-8">Category: {categorySlug}</h1>
@@ -95,7 +98,6 @@ const CategoryPage = () => {
                 </button>
               </div>
             )}
-
           </>
         )}
       </div>
