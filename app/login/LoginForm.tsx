@@ -52,19 +52,25 @@ export default function LoginPage() {
             setError(res.error)
             setIsLoading(false)
         } else {
-            window.location.href = "/";
+          router.push(callbackUrl)
         }
     };
     const handleGoogleSignIn = async () => {
-        setIsLoading(true);
-        setError('');
-        try {
-            await signIn('google', { redirect: false });
-        } catch {
-            setIsLoading(false);
-            setError('Google sign-in failed.');
-        }
+      setIsLoading(true);
+      setError('');
+      const res = await signIn("google", {
+        redirect: false, 
+        callbackUrl,
+      });
+    
+      if (res?.error) {
+        setError(res.error || "Google sign-in failed.");
+        setIsLoading(false);
+      } else {
+        router.push(callbackUrl); 
+      }
     };
+    
 
 
 

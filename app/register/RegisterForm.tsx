@@ -75,7 +75,8 @@ export default function RegisterPage() {
             }
 
 
-            router.push("/");
+            router.push(callbackUrl);
+
         } catch {
             setIsLoading(false);
             setError("An unexpected error occurred.");
@@ -102,43 +103,38 @@ export default function RegisterPage() {
     };
 
     useEffect(() => {
-        const checkAndSubscribe = async () => {
-            if (status === 'authenticated') {
-                const shouldSubscribe = JSON.parse(localStorage.getItem('subscribeToNewsletter') || 'false');
+      const checkAndSubscribe = async () => {
+        if (status !== 'authenticated') return;
+    
+        const shouldSubscribe = JSON.parse(localStorage.getItem('subscribeToNewsletter') || 'false');
+        if (shouldSubscribe) {
+          setNewsLetterLoading(true);
+          try {
+            await fetch('/api/subscribe-newsletter', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+          } catch {
+            console.error('Newsletter subscription failed.');
+          } finally {
+            setNewsLetterLoading(false);
+            localStorage.removeItem('subscribeToNewsletter');
+          }
+        }
+    
+        router.replace(callbackUrl); 
+      };
+    
+      checkAndSubscribe();
+    }, [status, router, callbackUrl]);
 
-                if (shouldSubscribe) {
-                    setNewsLetterLoading(true);
-                    try {
-                        await fetch('/api/subscribe-newsletter', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                        });
-                    } catch  {
-                        setNewsLetterLoading(false);
-                        console.error('Newsletter subscription failed.');
-                    } finally {
-                        localStorage.removeItem('subscribeToNewsletter');
-                        router.replace('/');
-                    }
-                } else {
-                    router.replace('/');
-                }
-            }
-        };
-
-        checkAndSubscribe();
-    }, [status, session, router]);
 
     if (newsletterLoading) {
         return (
-            <>
-                <Navbar />
-                <LoadingBar />
-                <h5>Redirecting</h5>
-                
-            </>
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <div className="flex-grow flex items-center justify-center">
+              <LoadingBar className="w-30 h-30" />
+            </div>
+        
+          </div>
         )
     }
 

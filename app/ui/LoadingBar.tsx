@@ -1,9 +1,16 @@
-'use client';
+"use client";
 
-const LoadingBar = () => {
+interface LoadingBarProps {
+  className?: string;
+}
+
+const LoadingBar: React.FC<LoadingBarProps> = ({ className }) => {
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center">
-      <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+    <div className="flex items-center justify-center">
+      <div
+        className={`border-2 border-[#026C79] text-sm hover:underline ml-1"
+      > border-t-transparent rounded-full animate-spin ${className || "w-4 h-4"}`}
+      ></div>
     </div>
   );
 };
