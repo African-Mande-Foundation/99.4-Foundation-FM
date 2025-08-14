@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
@@ -17,104 +17,113 @@ interface Photo {
   category: string;
 }
 
+interface Category {
+  id: string;
+  name: string;
+  bgImage: string;
+  count: number;
+}
+
+interface RawCategory {
+  id: number;
+  name?: string;
+  slug?: string;
+  attributes?: {
+    name?: string;
+    slug?: string;
+    cover?: {
+      data?: {
+        attributes?: {
+          url?: string;
+        };
+      };
+    };
+  };
+  backgroundImage?: {
+    url?: string;
+  };
+}
+
+interface RawPhoto {
+  id: number;
+  alt?: string;
+  title?: string;
+  category?: {
+    slug?: string;
+  };
+  image?: {
+    url?: string;
+  };
+}
+
 export default function PhotoGallery() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+ const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [showSlider, setShowSlider] = useState(false);
+  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
-  const photos: Photo[] = [
-    // Events Category
-    { id: 1, src: "/slider1.jpg", alt: "Community Event 1", title: "Annual Community Festival", category: "events" },
-    { id: 2, src: "/slider2.jpg", alt: "Community Event 2", title: "Radio Launch Party", category: "events" },
-    { id: 3, src: "/slider3.jpg", alt: "Community Event 3", title: "Foundation FM Anniversary", category: "events" },
-    { id: 4, src: "/slider1.jpg", alt: "Community Event 4", title: "Community Outreach Day", category: "events" },
-    { id: 5, src: "/slider2.jpg", alt: "Community Event 5", title: "Local Talent Show", category: "events" },
-    { id: 6, src: "/slider3.jpg", alt: "Community Event 6", title: "Radio Station Opening", category: "events" },
-    { id: 7, src: "/slider1.jpg", alt: "Community Event 7", title: "Community Awards Night", category: "events" },
-    { id: 8, src: "/slider2.jpg", alt: "Community Event 8", title: "Foundation FM Fundraiser", category: "events" },
-    { id: 9, src: "/slider3.jpg", alt: "Community Event 9", title: "Community Radio Day", category: "events" },
-    { id: 10, src: "/slider1.jpg", alt: "Community Event 10", title: "Local Music Festival", category: "events" },
-    { id: 11, src: "/slider2.jpg", alt: "Community Event 11", title: "Radio Station Tour", category: "events" },
-    { id: 12, src: "/slider3.jpg", alt: "Community Event 12", title: "Community Celebration", category: "events" },
+useEffect(() => {
+  async function fetchData() {
+    try {
+      const [catRes, photoRes] = await Promise.all([
+        fetch("/api/gallery/categories").then(r => r.json()),
+        fetch("/api/gallery/photos").then(r => r.json()),
+      ]);
 
-    // Youth Programs Category
-    { id: 13, src: "/slider2.jpg", alt: "Youth Program 1", title: "Youth Radio Training", category: "youth" },
-    { id: 14, src: "/slider3.jpg", alt: "Youth Program 2", title: "Teen DJ Workshop", category: "youth" },
-    { id: 15, src: "/slider1.jpg", alt: "Youth Program 3", title: "Young Voices Program", category: "youth" },
-    { id: 16, src: "/slider2.jpg", alt: "Youth Program 4", title: "Youth Leadership Camp", category: "youth" },
-    { id: 17, src: "/slider3.jpg", alt: "Youth Program 5", title: "Teen Talk Show", category: "youth" },
-    { id: 18, src: "/slider1.jpg", alt: "Youth Program 6", title: "Youth Media Training", category: "youth" },
-    { id: 19, src: "/slider2.jpg", alt: "Youth Program 7", title: "Young Journalists", category: "youth" },
-    { id: 20, src: "/slider3.jpg", alt: "Youth Program 8", title: "Teen Radio Hour", category: "youth" },
-    { id: 21, src: "/slider1.jpg", alt: "Youth Program 9", title: "Youth Empowerment Day", category: "youth" },
-    { id: 22, src: "/slider2.jpg", alt: "Youth Program 10", title: "Young Talent Showcase", category: "youth" },
-    { id: 23, src: "/slider3.jpg", alt: "Youth Program 11", title: "Teen Community Service", category: "youth" },
-    { id: 24, src: "/slider1.jpg", alt: "Youth Program 12", title: "Youth Radio Station", category: "youth" },
+      const categoryData: Category[] = (catRes.data || []).map((cat: RawCategory) => {
+        const name = cat?.name || cat?.attributes?.name || "Unnamed Category";
+        const slug = cat?.slug || cat?.attributes?.slug || "unknown";
 
-    // Studio Category
-    { id: 25, src: "/slider3.jpg", alt: "Studio Session 1", title: "Live Radio Recording", category: "studio" },
-    { id: 26, src: "/slider1.jpg", alt: "Studio Session 2", title: "Podcast Production", category: "studio" },
-    { id: 27, src: "/slider2.jpg", alt: "Studio Session 3", title: "Music Recording Session", category: "studio" },
-    { id: 28, src: "/slider3.jpg", alt: "Studio Session 4", title: "Interview Recording", category: "studio" },
-    { id: 29, src: "/slider1.jpg", alt: "Studio Session 5", title: "Sound Engineering", category: "studio" },
-    { id: 30, src: "/slider2.jpg", alt: "Studio Session 6", title: "Live Broadcast", category: "studio" },
-    { id: 31, src: "/slider3.jpg", alt: "Studio Session 7", title: "Equipment Setup", category: "studio" },
-    { id: 32, src: "/slider1.jpg", alt: "Studio Session 8", title: "Studio Tour", category: "studio" },
-    { id: 33, src: "/slider2.jpg", alt: "Studio Session 9", title: "Audio Production", category: "studio" },
-    { id: 34, src: "/slider3.jpg", alt: "Studio Session 10", title: "Radio Show Recording", category: "studio" },
-    { id: 35, src: "/slider1.jpg", alt: "Studio Session 11", title: "Studio Equipment", category: "studio" },
-    { id: 36, src: "/slider2.jpg", alt: "Studio Session 12", title: "Professional Recording", category: "studio" },
+        const bgImage =
+          cat?.backgroundImage?.url
+            ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${cat.backgroundImage.url}`
+            : cat?.attributes?.cover?.data?.attributes?.url
+            ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${cat.attributes.cover.data.attributes.url}`
+            : "/placeholder.jpg";
 
-    // Education Category
-    { id: 37, src: "/slider1.jpg", alt: "Education Program 1", title: "Media Literacy Workshop", category: "education" },
-    { id: 38, src: "/slider2.jpg", alt: "Education Program 2", title: "Journalism Training", category: "education" },
-    { id: 39, src: "/slider3.jpg", alt: "Education Program 3", title: "Digital Media Course", category: "education" },
-    { id: 40, src: "/slider1.jpg", alt: "Education Program 4", title: "Communication Skills", category: "education" },
-    { id: 41, src: "/slider2.jpg", alt: "Education Program 5", title: "Broadcasting Training", category: "education" },
-    { id: 42, src: "/slider3.jpg", alt: "Education Program 6", title: "Media Production Class", category: "education" },
-    { id: 43, src: "/slider1.jpg", alt: "Education Program 7", title: "Public Speaking Workshop", category: "education" },
-    { id: 44, src: "/slider2.jpg", alt: "Education Program 8", title: "Storytelling Course", category: "education" },
-    { id: 45, src: "/slider3.jpg", alt: "Education Program 9", title: "Digital Storytelling", category: "education" },
-    { id: 46, src: "/slider1.jpg", alt: "Education Program 10", title: "Media Ethics Training", category: "education" },
-    { id: 47, src: "/slider2.jpg", alt: "Education Program 11", title: "Community Journalism", category: "education" },
-    { id: 48, src: "/slider3.jpg", alt: "Education Program 12", title: "Media Skills Development", category: "education" }
-  ];
+        return {
+          id: slug,
+          name,
+          bgImage,
+          count: (photoRes.data || []).filter((p: RawPhoto) => {
+            const photoSlug = p?.category?.slug || "unknown";
+            return photoSlug === slug;
+          }).length,
+        };
+      });
 
-  const categories = [
-    { 
-      id: 'events', 
-      name: 'Events', 
-      bgImage: "/slider1.jpg",
-      count: photos.filter(p => p.category === 'events').length 
-    },
-    { 
-      id: 'youth', 
-      name: 'Youth Programs', 
-      bgImage: "/slider2.jpg",
-      count: photos.filter(p => p.category === 'youth').length 
-    },
-    { 
-      id: 'studio', 
-      name: 'Studio', 
-      bgImage: "/slider3.jpg",
-      count: photos.filter(p => p.category === 'studio').length 
-    },
-    { 
-      id: 'education', 
-      name: 'Education', 
-      bgImage: "/slider1.jpg",
-      count: photos.filter(p => p.category === 'education').length 
+      const photoData: Photo[] = (photoRes.data || []).map((p: RawPhoto, index: number) => {
+        const imgUrl =
+          p?.image?.url
+            ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${p.image.url}`
+            : "/placeholder.jpg";
+
+        return {
+          id: p?.id ?? index,
+          src: imgUrl,
+          alt: p?.alt || p?.title || "",
+          title: p?.title || "Untitled Photo",
+          category: p?.category?.slug || "uncategorized",
+        };
+      });
+
+      setCategories(categoryData);
+      setPhotos(photoData);
+    } catch (err) {
+      console.error("Error fetching gallery data", err);
     }
-  ];
+  }
 
-  const filteredPhotos = selectedCategory 
-    ? photos.filter(photo => photo.category === selectedCategory)
-    : [];
+  fetchData();
+}, []);
+const filteredPhotos = selectedCategory
+  ? photos.filter(photo => photo.category === selectedCategory)
+  : [];
 
   const handleCategoryClick = (categoryId: string) => {
     setSelectedCategory(categoryId);
     setShowSlider(true);
   };
-
   const handleBackToGrid = () => {
     setShowSlider(false);
     setSelectedCategory(null);
@@ -141,7 +150,6 @@ export default function PhotoGallery() {
             modules={[Navigation, Pagination, Autoplay]}
             slidesPerView={1}
             centeredSlides={true}
-            loop={true}
             navigation={true}
             pagination={{ 
               clickable: true,
@@ -156,19 +164,19 @@ export default function PhotoGallery() {
             }}
             breakpoints={{
               640: {
-                slidesPerView: 2,
+                slidesPerView: Math.min(filteredPhotos.length, 2),
                 spaceBetween: 10,
               },
               1024: {
-                slidesPerView: 3,
+                slidesPerView: Math.min(filteredPhotos.length, 3),
                 spaceBetween: 10,
               },
               1280: {
-                slidesPerView: 3,
+                slidesPerView: Math.min(filteredPhotos.length, 3),
                 spaceBetween: 10,
               },
             }}
-            className="h-full [&_.swiper-button-next]:top-1/2 [&_.swiper-button-prev]:top-1/2 [&_.swiper-pagination]:bottom-4"
+            className="h-96 [&_.swiper-button-next]:top-1/2 [&_.swiper-button-prev]:top-1/2 [&_.swiper-pagination]:bottom-4"
             style={{
               '--swiper-navigation-size': '24px',
               '--swiper-navigation-color': '#ffffff',
@@ -180,9 +188,9 @@ export default function PhotoGallery() {
                 <motion.div
                   whileHover={{ scale: 1.05, y: -10 }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="w-full h-80 md:h-96 lg:h-100 xl:h-110"
+                  className="flex items-center justify-center w-full h-96"
                 >
-                  <div className="relative w-full h-full  overflow-hidden shadow-2xl">
+                  <div className="relative w-full h-full overflow-hidden shadow-2xl flex flex-col justify-end">
                     <Image
                       src={photo.src}
                       alt={photo.alt}
@@ -192,7 +200,9 @@ export default function PhotoGallery() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                       <h3 className="font-bold text-lg mb-2">{photo.title}</h3>
-                      <p className="text-sm opacity-90 capitalize">{photo.category}</p>
+                      <p className="text-sm opacity-90 capitalize">
+                        {categories.find(c => c.id === photo.category)?.name || photo.category}
+                      </p>
                     </div>
                   </div>
                 </motion.div>
