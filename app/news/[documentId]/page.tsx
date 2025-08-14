@@ -48,11 +48,14 @@ export default function ArticlePage() {
 
   if (loading) {
     return (
-      <>
+      <div className="flex flex-col min-h-screen">
         <Navbar />
-        <LoadingBar />;
-        <Footer />
-      </>
+        <div className="flex-grow flex items-center justify-center">
+          <LoadingBar className="w-30 h-30" />
+        </div>
+    
+      </div>
+
     );
   }
 

@@ -1,11 +1,14 @@
 "use client";
 
+import LoadingBar from "../../../ui/LoadingBar";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Comment } from "@/app/lib/types";
 import CommentForm from "./CommentForm";
 import CommentReaction from "./CommentReaction";
+import { useSession } from "next-auth/react";
+import { Trash2 } from "lucide-react";
 
 interface CommentListProps {
   comments: Comment[];
@@ -25,6 +28,9 @@ export default function CommentList({
   onSetParentCommentId,
 }: CommentListProps) {
   const [commentsState, setCommentsState] = useState<Comment[]>(comments);
+  const [deletingComments, setDeletingComments] = useState<Set<number>>(
+    new Set(),
+  );
   const [replies, setReplies] = useState<Record<string, Comment[]>>({});
   const [loadingReplies, setLoadingReplies] = useState<Record<string, boolean>>(
     {},
@@ -33,6 +39,7 @@ export default function CommentList({
     new Set(),
   );
 
+  const { data: session } = useSession();
   useEffect(() => {
     setCommentsState(comments);
   }, [comments]);
@@ -104,78 +111,145 @@ export default function CommentList({
     onSetParentCommentId(commentId);
   };
 
+  const handleDeleteComment = async (commentId: number) => {
+    if (!session?.jwt) {
+      alert("You must be logged in to delete comments.");
+      return;
+    }
+
+    setDeletingComments((prev) => new Set(prev).add(commentId));
+
+    // Save original state for rollback
+    const originalCommentsState = commentsState;
+    const originalReplies = { ...replies };
+
+    // Optimistically remove comment from top-level
+    setCommentsState((prev) => prev.filter((c) => c.id !== commentId));
+
+    // Optimistically remove comment from nested replies
+    setReplies((prev) => {
+      const newReplies = { ...prev };
+      for (const parentId in newReplies) {
+        const index = newReplies[parentId].findIndex((c) => c.id === commentId);
+        if (index !== -1) {
+          newReplies[parentId].splice(index, 1);
+
+          // Decrease parent comment repliesCount if parent exists
+          setCommentsState((prevComments) =>
+            prevComments.map((comment) =>
+              comment.id === Number(parentId)
+                ? {
+                    ...comment,
+                    repliesCount: Math.max(0, comment.repliesCount - 1),
+                  }
+                : comment,
+            ),
+          );
+        }
+      }
+      return newReplies;
+    });
+
+    try {
+      const res = await fetch(`/api/comments/${commentId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.jwt}`,
+        },
+      });
+
+      if (!res.ok) {
+        // rollback if API fails
+        setCommentsState(originalCommentsState);
+        setReplies(originalReplies);
+        const errorData = await res.json();
+        alert(
+          `Failed to delete comment: ${errorData.message || res.statusText}`,
+        );
+      }
+    } catch (error) {
+      // rollback if network error
+      setCommentsState(originalCommentsState);
+      setReplies(originalReplies);
+      console.error("Error deleting comment:", error);
+      alert("An error occurred while trying to delete the comment.");
+    } finally {
+      setDeletingComments((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(commentId);
+        return newSet;
+      });
+    }
+  };
+
   /** Render comments recursively (handles nesting) */
   const renderComments = (list: Comment[]) => (
     <div className="space-y-4">
       {list.map((comment) => (
         <div key={comment.id} className="p-4 rounded-lg bg-white">
-          <div className="flex items-center mb-2">
-            {comment.user?.photoUrl && (
-              <Image
-                src={comment.user.photoUrl}
-                alt={comment.user.username || "User"}
-                width={30}
-                height={30}
-                className="rounded-full mr-2"
-              />
+          {/* Header: Avatar + Username + Date + Delete Button */}
+          <div className="flex justify-between items-start mb-2">
+            <div className="flex items-center space-x-2">
+              {comment.user?.photoUrl && (
+                <Image
+                  src={comment.user.photoUrl}
+                  alt={comment.user.username || "User"}
+                  width={30}
+                  height={30}
+                  className="rounded-full"
+                />
+              )}
+              <div>
+                <p className="font-semibold text-gray-800">
+                  {comment.user?.username || "Anonymous"}
+                </p>
+                <p className="text-sm text-gray-500">
+                  {new Date(comment.createdAt).toLocaleDateString()}
+                </p>
+              </div>
+            </div>
+
+            {Number(session?.user?.id) === comment.user?.id && (
+              <button
+                onClick={() => handleDeleteComment(comment.id)}
+                disabled={deletingComments.has(comment.id)}
+                className="text-red-500 hover:text-red-700 p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500"
+                title="Delete Comment"
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
             )}
-            <p className="font-semibold text-gray-800">
-              {comment.user?.username || "Anonymous"}
-            </p>
-            <p className="text-sm text-gray-500 ml-2">
-              {new Date(comment.createdAt).toLocaleDateString()}
-            </p>
           </div>
 
-          <p className="text-gray-700">{comment.Content}</p>
+          {/* Comment Content */}
+          <p className="text-gray-700 mb-2">{comment.Content}</p>
 
-          {/* Like/Dislike */}
-          <CommentReaction
-            comment={comment}
-            onReactionUpdate={handleReactionUpdate}
-          />
+          {/* Reactions & Reply */}
+          <div className="flex items-center space-x-4 mb-2">
+            <CommentReaction
+              comment={comment}
+              onReactionUpdate={handleReactionUpdate}
+            />
+            <button
+              onClick={() => handleReplyClick(comment.documentId)}
+              className="text-[#026C79] text-sm hover:underline"
+            >
+              Reply
+            </button>
+          </div>
 
-          {/* Reply button */}
-          <button
-            onClick={() => handleReplyClick(comment.documentId)}
-            className="text-[#026C79] text-sm mt-2 hover:underline"
-          >
-            Reply
-          </button>
-
-          {/* Show/Hide replies */}
+          {/* Show/Hide Replies */}
           {comment.repliesCount > 0 && (
             <button
               onClick={() => handleToggleReplies(String(comment.id))}
               disabled={loadingReplies[String(comment.id)]}
-              className="text-[#026C79] text-sm mt-2 hover:underline ml-4"
+              className="text-[#026C79] text-sm hover:underline ml-1"
             >
               {loadingReplies[String(comment.id)] ? (
-                <span className="inline-flex items-center">
-                  <svg
-                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-[#026C79]"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373
-                      0 0 5.373 0 12h4zm2
-                      5.291A7.962 7.962 0 014 12H0c0
-                      3.042 1.135 5.824 3 7.938l3-2.647z"
-                    />
-                  </svg>
-                  Loading...
+                <span className="inline-flex items-center space-x-1">
+                  <LoadingBar className="w-4 h-4" />
+                  <span>Loading...</span>
                 </span>
               ) : expandedComments.has(String(comment.id)) ? (
                 `Hide replies`
@@ -185,9 +259,9 @@ export default function CommentList({
             </button>
           )}
 
-          {/* Reply form */}
+          {/* Reply Form */}
           {currentParentCommentId === comment.documentId && userId && (
-            <div className="mt-4 ml-4">
+            <div className="mt-4 ml-6">
               <CommentForm
                 articleId={articleId}
                 userId={userId}
@@ -201,10 +275,10 @@ export default function CommentList({
             </div>
           )}
 
-          {/* Render nested replies */}
+          {/* Nested Replies */}
           {expandedComments.has(String(comment.id)) &&
             replies[String(comment.id)] && (
-              <div className="ml-8 mt-4 border-l-2 border-gray-300 pl-4">
+              <div className="ml-6 mt-4 border-l-2 border-gray-300 pl-4">
                 {renderComments(replies[String(comment.id)])}
               </div>
             )}
