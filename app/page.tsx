@@ -40,7 +40,7 @@ export default function Home() {
         <div id="collection" className=" flex flex-col p-4 pt-6 md:pt-10 lg:px-20 xl:px-45 items-center justify-center w-full border-green-600 border-0 bg-[#0d0d0d]">
           <Collection/>
         </div>
-        <div id="about" className=" flex flex-col p-4 pt-6 md:pt-10 lg:px-20 xl:px-45 items-center justify-center w-full border-green-600 border-0">
+        <div id="about" className=" flex flex-col p-4 pt-6 md:pt-10 lg:px-20 xl:px-45 items-center justify-center w-full lg:min-h-110 border-green-600 border-0">
           <h2 className="text-3xl font-bold text-center mb-8 text-white">ABOUT OUR RADIO STATION</h2>
           <div className="text-justify text-white text-sm lg:text-base flex flex-col items-center justify-center gap-4 mb-8 ">
           <p>
@@ -56,7 +56,9 @@ export default function Home() {
           </div>
 
           <Link href="">
-          <button className="cursor-pointer border-1 border-[#03A0B4] text-white text-sm md:text-base lg:text-xl px-4 py-2">Learn More</button>
+          <button className="px-4 py-2 bg-[#03A0B4] text-white text-xs md:text-sm lg:text-base rounded cursor-pointer hover:bg-transparent border-1 border-[#03A0B4]">
+                Learn More
+              </button>
           </Link>
           
         </div>
@@ -74,16 +76,16 @@ export default function Home() {
               <Image
               src="https://firebasestorage.googleapis.com/v0/b/foundation-fm.firebasestorage.app/o/Foundation_FM_Media%2Fistockphoto-1212074366-612x612-removebg-preview.png?alt=media&token=14950853-ca77-46f5-962b-60f2e94ebe0d"
               alt="Programs Pic"
-              width={200}
-              height={200}
+              width={1000}
+              height={1000}
               className="w-2xl"/>
             </div>
-            <div className="flex flex-col items-start justify-center gap-4 mb-8 md:w-1/2">
+            <div className="flex flex-col items-start border-0 border-amber-300 xl:justify-center gap-4 mb-8 xl:px-10 md:w-1/2">
               <p className="text-justify text-white text-sm lg:text-base">
                 At Africano Mande Foundation, our programs and initiatives are designed to respond to the real needs of the communities we serve From health outreach and education support to youth empowerment, media, and sustainable livelihoods, each initiative is built on inclusivity, collaboration, and long-term impact. Explore our ongoing efforts and discover how we&apos;re turning ideas into action.
               </p>
               <Link href="" className="">
-              <button className="px-4 py-2 bg-[#03A0B4] text-white text-xs md:text-sm lg:text-base rounded cursor-pointer">
+               <button className="px-4 py-2 bg-[#03A0B4] text-white text-xs md:text-sm lg:text-base rounded cursor-pointer hover:bg-transparent border-1 border-[#03A0B4]">
                 Learn More
               </button>
               </Link>
@@ -96,8 +98,8 @@ export default function Home() {
               <Image
               src="https://firebasestorage.googleapis.com/v0/b/foundation-fm.firebasestorage.app/o/Foundation_FM_Media%2FIMG-20220323-WA0012.jpg?alt=media&token=181d64fc-c649-495a-95a9-1ff82a7643ee"
               alt="Testimonial"
-              width={200}
-              height={200}
+              width={1000}
+              height={1000}
               className="w-2xl md:w-xl lg:w-sm"
               />
             </div>
