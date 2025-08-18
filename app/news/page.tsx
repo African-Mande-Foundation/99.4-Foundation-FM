@@ -140,6 +140,11 @@ const NewsPage = () => {
             ) : (
               <ArticleGrid articles={articles} />
             )}
+            <div className="text-center mt-8">
+              <Link href="/news/all" className="inline-block px-6 py-3 border border-black rounded-full text-sm md:text-base font-medium hover:bg-black hover:text-white transition">
+                See all
+              </Link>
+            </div>
           </div>
 
           <div className="w-full lg:w-2/3 xl:w-1/3">

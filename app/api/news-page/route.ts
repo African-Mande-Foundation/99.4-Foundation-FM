@@ -23,7 +23,7 @@ export async function GET() {
             fetch(`${process.env.STRAPI_URL}/api/articles?populate[author][populate]=avatar&populate[category]=true&populate[cover]=true&pagination[page]=1&pagination[pageSize]=4&sort[0]=publishedAt:desc`, { headers }),
             fetch(`${process.env.STRAPI_URL}/api/categories?populate=cover`, { headers }),
             fetch(`${process.env.STRAPI_URL}/api/authors?populate=avatar`, { headers }),
-            fetch(`${process.env.STRAPI_URL}/api/comments?sort=createdAt:desc&pagination[limit]=5&populate[user]=true`, { headers })
+            fetch(`${process.env.STRAPI_URL}/api/comments?sort=createdAt:desc&filters[Approved][$eq]=true&pagination[limit]=5&populate[user]=true`, { headers })
 
         ]);
 

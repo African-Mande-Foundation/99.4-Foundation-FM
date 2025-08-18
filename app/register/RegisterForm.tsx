@@ -22,7 +22,7 @@ export default function RegisterPage() {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
-    const { data: session, status } = useSession();
+    const {status } = useSession();
 
     const searchParams = useSearchParams()
 
