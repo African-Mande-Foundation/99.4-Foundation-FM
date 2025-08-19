@@ -43,7 +43,7 @@ export default function DonatePage() {
             <div className="bg-gray-800 p-6 rounded-lg">
               <h3 className="text-xl font-bold mb-3">Other Amount</h3>
               <p className="mb-4">Choose your own donation amount to support our community programs.</p>
-              <div className="flex gap-4">
+              <div className="flex flex-col md:flex-row gap-4">
                 <input 
                   type="number" 
                   placeholder="Enter amount" 

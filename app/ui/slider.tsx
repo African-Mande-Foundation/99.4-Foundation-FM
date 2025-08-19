@@ -161,7 +161,7 @@ return (
           </motion.div>
         </AnimatePresence>
       ) : (
-        // For slice transitions, just show the image as background
+        
         <Image
           src={slide.image}
           alt={slide.title}
@@ -185,7 +185,7 @@ return (
                 left: `${i * 10}%`,
                 width: '10%',
                 height: '100%',
-                background: '#08D6ED', // mask color
+                background: '#08D6ED',
                 zIndex: 20,
               }}
               initial={{ y: 0 }}
@@ -277,7 +277,7 @@ return (
             <h1 className="text-7xl xl:text-8xl">WE ARE</h1>
             <h1 className="text-7xl xl:text-8xl">LIVE</h1>
             <p className="text-xl mt-10 mb-10">06:00 - 24:00</p>
-            <Link href="#" className='border-2 border-white text-3xl p-2 mb-4'>DONATE NOW</Link>
+            <Link href="/donate" className='border-2 border-white text-3xl p-2 mb-4'>DONATE NOW</Link>
           
          
         </motion.div>

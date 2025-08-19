@@ -151,11 +151,7 @@ const filteredPhotos = selectedCategory
             Back to Gallery
           </button>
 
-          {/* Category Title */}
-          <div className="absolute top-8 right-8 z-20 text-white text-2xl font-bold bg-black/40 px-6 py-3 backdrop-blur-md ">
-            {categories.find(c => c.id === selectedCategory)?.name}
-          </div>
-
+      
           <Swiper
             modules={[Navigation, Pagination, Autoplay]}
             slidesPerView={1}
