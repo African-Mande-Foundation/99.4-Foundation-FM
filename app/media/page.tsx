@@ -1,4 +1,3 @@
-import Footer from "../ui/Footer";
 import Navbar from "../ui/Navbar";
 
 import PhotoGallery from "../ui/PhotoGallery";
