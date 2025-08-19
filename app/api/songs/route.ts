@@ -26,14 +26,16 @@ export async function GET() {
 
     const data = await res.json();
 
-const songs = (data.data as StrapiSong[]).map((item) => ({
-  id: item.id,
-  title: item.title,
-  desc: item.description,
-  url: item.songs?.url
-    ? `${process.env.STRAPI_URL}${item.songs.url}`
-    : "",
-}));
+const songs = (data.data as StrapiSong[])
+  .filter(item => item.songs?.url) 
+  .map((item) => ({
+    id: item.id,
+    title: item.title,
+    desc: item.description,
+    url: item.songs!.url.startsWith("http")
+      ? item.songs!.url
+      : `${process.env.STRAPI_URL}${item.songs!.url}`,
+  }));
 
 
     return NextResponse.json(songs);

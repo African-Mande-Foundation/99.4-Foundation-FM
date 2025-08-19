@@ -34,7 +34,14 @@ export default function Player(){
       try {
         const res = await fetch("/api/songs");
         if (!res.ok) throw new Error("Failed to fetch songs");
-        const songs = await res.json();
+        let songs = await res.json();
+        // Fix: prepend Strapi domain if url is relative
+        songs = songs.map((song: Song) => ({
+          ...song,
+          url: song.url.startsWith("http")
+            ? song.url
+            : `${process.env.NEXT_PUBLIC_STRAPI_URL}${song.url}`,
+        }));
         setPlaylist(songs);
       } catch (error) {
         console.error("Error fetching songs:", error);
