@@ -45,7 +45,7 @@ export default function LiveNow() {
       <div className="max-w-5xl mx-auto space-y-10">
         {/* Live Banner */}
         {liveShow ? (
-          <div className="p-6 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-700 text-white shadow-lg">
+          <div className="p-6 rounded-lg bg-gradient-to-r from-[#03A0B4] to-indigo-700 text-white shadow-lg">
             <h2 className="text-sm uppercase tracking-wide">On Air Now</h2>
             <p className="text-2xl font-bold">{liveShow.title}</p>
             <p className="text-sm opacity-80">
@@ -57,15 +57,15 @@ export default function LiveNow() {
                 style={{ width: `${liveShow.progress}%` }}
               />
             </div>
-            <p className="text-xs mt-1 opacity-75">
+            <p className="text-xs mt-1 opacity-80">
               {liveShow.progress.toFixed(0)}% through this show
             </p>
           </div>
         ) : (
-          <div className="p-6 rounded-lg bg-purple-50 text-purple-800 border border-purple-200">
+          <div className="p-6 rounded-lg bg-purple-50 text-[#03A0B4] border border-purple-200">
             <h2 className="text-sm font-semibold">Nothing live right now</h2>
             <p className="text-sm">
-              We’ll light up this banner automatically when a show is on air for the selected day.
+              We'll light up this banner automatically when a show is on air for the selected day.
             </p>
           </div>
         )}
@@ -95,7 +95,7 @@ export default function LiveNow() {
       onClick={() => setSelectedCategory(cat)}
       className={`px-3 py-1 rounded-full text-sm border transition ${
         selectedCategory === cat
-          ? "bg-purple-600 text-white border-purple-600"
+          ? "bg-[#03A0B4] text-white border-[#03A0B4]"
           : "bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200"
       }`}
     >
@@ -106,7 +106,7 @@ export default function LiveNow() {
 
         {/* Timeline */}
         <div>
-          <h3 className="text-lg font-semibold mb-4">
+          <h3 className="text-lg text-[#03A0B4] font-semibold mb-4">
             {days.find((d) => d.value === selectedDay)?.label} Timeline
           </h3>
           <div className="relative pl-6 border-l-2 border-gray-200 space-y-6">
@@ -116,14 +116,14 @@ export default function LiveNow() {
                 className="relative bg-white p-4 rounded-lg shadow flex items-center justify-between"
               >
                 {/* timeline dot */}
-                <div className="absolute -left-[14px] top-6 w-3 h-3 bg-purple-500 rounded-full border-2 border-white" />
+                <div className="absolute -left-[14px] top-6 w-3 h-3 bg-[#03A0B4] rounded-full border-2 border-white" />
 
                 {/* content */}
                 <div>
                   <p className="text-sm text-gray-500">
                     {show.start} – {show.end}
                   </p>
-                  <p className="font-semibold">{show.title}</p>
+                  <p className="font-semibold text-gray-700">{show.title}</p>
                   <span className="inline-block mt-1 px-2 py-0.5 text-xs rounded-full bg-gray-200 text-gray-700">
                     {show.genre}
                   </span>
@@ -147,7 +147,7 @@ export default function LiveNow() {
   <div className="border rounded-lg shadow bg-white">
     <div className="p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
       <div>
-        <h3 className="text-xl font-semibold">
+        <h3 className="text-xl text-[#03A0B4] font-semibold">
           Want this embedded on your homepage?
         </h3>
         <p className="text-gray-500">
