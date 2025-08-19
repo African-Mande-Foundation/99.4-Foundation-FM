@@ -1,5 +1,5 @@
 import Navbar from "../ui/Navbar";
-import Footer from "../ui/Footer";
+
 import PhotoGallery from "../ui/PhotoGallery";
 
 export default function MediaPage() {
@@ -19,7 +19,6 @@ export default function MediaPage() {
           <PhotoGallery />
         </div>
       </div>
-      <Footer />
     </div>
   );
 } 

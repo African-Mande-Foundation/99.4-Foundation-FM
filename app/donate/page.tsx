@@ -5,7 +5,7 @@ export default function DonatePage() {
   return (
     <div className="min-h-screen bg-[#1b1b1b]">
       <Navbar />
-      <div className="pt-20 px-4 lg:px-20 xl:px-45">
+      <div className="pt-20 px-4 lg:px-20 xl:px-45 mb-10">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold text-white mb-8">Support Our Mission</h1>
           <div className="text-white space-y-8">

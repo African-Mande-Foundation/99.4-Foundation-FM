@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
 
-    domains: ["firebasestorage.googleapis.com", 'img.youtube.com', "source.unsplash.com", "picsum.photos", "placehold.co",'localhost', "images.unsplash.com", "localhost:1337",], 
+    domains: ["firebasestorage.googleapis.com", 'img.youtube.com', "source.unsplash.com", "picsum.photos", "placehold.co",'localhost', "images.unsplash.com", "localhost:1337","young-basket-bbd005c9d4.strapiapp.com","young-basket-bbd005c9d4.media.strapiapp.com",], 
     
 
     remotePatterns: [
@@ -38,6 +38,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'young-basket-bbd005c9d4.media.strapiapp.com',
       },
     ],
   },

@@ -56,6 +56,14 @@ interface RawPhoto {
   };
 }
 
+const getStrapiMedia = (url?: string) => {
+  if (!url) return "/placeholder.jpg";
+  // If already absolute, return as is
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
+  // Otherwise, prepend base URL
+  return `${process.env.NEXT_PUBLIC_STRAPI_URL}${url}`;
+};
+
 export default function PhotoGallery() {
  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [showSlider, setShowSlider] = useState(false);
@@ -76,9 +84,9 @@ useEffect(() => {
 
         const bgImage =
           cat?.backgroundImage?.url
-            ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${cat.backgroundImage.url}`
+            ? getStrapiMedia(cat.backgroundImage.url)
             : cat?.attributes?.cover?.data?.attributes?.url
-            ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${cat.attributes.cover.data.attributes.url}`
+            ? getStrapiMedia(cat.attributes.cover.data.attributes.url)
             : "/placeholder.jpg";
 
         return {
@@ -95,7 +103,7 @@ useEffect(() => {
       const photoData: Photo[] = (photoRes.data || []).map((p: RawPhoto, index: number) => {
         const imgUrl =
           p?.image?.url
-            ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${p.image.url}`
+            ? getStrapiMedia(p.image.url)
             : "/placeholder.jpg";
 
         return {
@@ -106,6 +114,8 @@ useEffect(() => {
           category: p?.category?.slug || "uncategorized",
         };
       });
+
+      
 
       setCategories(categoryData);
       setPhotos(photoData);
@@ -191,12 +201,12 @@ const filteredPhotos = selectedCategory
                   className="flex items-center justify-center w-full h-96"
                 >
                   <div className="relative w-full h-full overflow-hidden shadow-2xl flex flex-col justify-end">
-                    <Image
-                      src={photo.src}
-                      alt={photo.alt}
-                      fill
-                      className="object-cover transition-transform duration-500 hover:scale-110"
-                    />
+                   <Image
+  src={getStrapiMedia(photo.src)}
+  alt={photo.alt || "Photo"}
+  fill
+  className="object-cover transition-transform duration-500 hover:scale-110"
+/>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                       <h3 className="font-bold text-lg mb-2">{photo.title}</h3>
@@ -228,11 +238,12 @@ const filteredPhotos = selectedCategory
           >
             <div className="absolute inset-0">
               <Image
-                src={category.bgImage}
-                alt={category.name}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
-              />
+  src={getStrapiMedia(category.bgImage)}
+  alt={category.name}
+  fill
+  className="object-cover transition-transform duration-500 group-hover:scale-110"
+/>
+
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent group-hover:from-black/60 group-hover:via-black/20 transition-all duration-500" />
             </div>
             
