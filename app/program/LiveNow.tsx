@@ -65,7 +65,7 @@ export default function LiveNow() {
           <div className="p-6 rounded-lg bg-purple-50 text-[#03A0B4] border border-purple-200">
             <h2 className="text-sm font-semibold">Nothing live right now</h2>
             <p className="text-sm">
-              We'll light up this banner automatically when a show is on air for the selected day.
+              We&apos;ll light up this banner automatically when a show is on air for the selected day.
             </p>
           </div>
         )}
@@ -130,7 +130,7 @@ export default function LiveNow() {
                 </div>
 
                 {/* set reminder */}
-                <button className="ml-4 px-3 py-1.5 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition" onClick={downloadICSFeed}>
+                <button className="ml-4 px-3 py-1.5 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition" onClick={() => downloadShowReminder(show)}>
                   Set Reminder →
                 </button>
               </div>
