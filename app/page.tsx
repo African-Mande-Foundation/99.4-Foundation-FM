@@ -86,7 +86,7 @@ export default function Home() {
               </p>
               <Link href="/program" className="">
                <button className="px-4 py-2 bg-[#03A0B4] text-white text-xs md:text-sm lg:text-base rounded cursor-pointer hover:bg-transparent border-1 border-[#03A0B4]">
-                Learn More
+                Radio Program
               </button>
               </Link>
             </div>
