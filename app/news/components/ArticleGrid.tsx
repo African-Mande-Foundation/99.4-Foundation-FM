@@ -30,7 +30,7 @@ const ArticleGrid = ({ articles }: ArticleGridProps) => {
             {article.cover && (
               <div className="relative w-full h-64">
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${article.cover.url}`}
+                  src={`${article.cover.url}`}
                   alt={article.cover.alternativeText || article.title}
                   fill
                   style={{ objectFit: "cover" }}

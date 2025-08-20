@@ -23,7 +23,7 @@ const Authors = ({ authors }: AuthorsProps) => {
           >
             {author.avatar && (
               <Image
-                src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${author.avatar.formats.thumbnail.url}`}
+                src={`${author.avatar.formats.thumbnail.url}`}
                 alt={author.name}
                 width={36}
                 height={36}
