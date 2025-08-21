@@ -40,23 +40,25 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <>
+     <div className="w-screen h-screen">
       <Navbar />
-      <div className="bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <h2 className="text-center text-3xl font-extrabold text-gray-900">
+      <div className="relative flex flex-col items-center w-95/100 h-85/100 justify-center">
+       <div className="absolute top-0 left-0 z-30 p-4 w-full bg-white h-full items-center justify-center flex">
+        <div className='w-[280px] md:w-[400px]'>
+        <div>
+          <h2 className="mt-4 text-center text-3xl font-extrabold text-gray-900">
             Forgot Your Password?
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Enter your email address below and we&apos;ll send you a link to reset your password.
+            Enter your email address below and we&apos;ll send you a link to reset your password. 
           </p>
         </div>
-        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white py-8 px-4 shadow-lg sm:px-10">
-            <form className="space-y-6" onSubmit={handleSubmit}>
+        
+          
+            <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
               {message && <p className="text-green-600 text-center text-sm">{message}</p>}
-              {error && <p className="text-red-500 text-center text-sm">{error}</p>}
-              <div>
+              {error && <p className="text-red-500 text-center">{error}</p>}
+              <div className="flex flex-col mb-2 pt-2">
                 <label htmlFor="email-address" className="sr-only">Email address</label>
                 <input
                   id="email-address"
@@ -66,7 +68,7 @@ export default function ForgotPasswordPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm"
+                  className="relative block w-full p-2 border-2 border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none bg-[#F5F5F5] focus:ring-[#03A0B4] focus:border-[#03A0B4] focus:z-10 sm:text-sm"
                   placeholder="Email address"
                 />
               </div>
@@ -74,7 +76,7 @@ export default function ForgotPasswordPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:opacity-50 transition ease-in-out duration-150"
+                  className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#03A0B4] hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:opacity-50 cursor-pointer transition ease-in-out duration-150"
                 >
                   {isLoading ? 'Sending...' : 'Send Reset Link'}
                 </button>
@@ -85,10 +87,13 @@ export default function ForgotPasswordPage() {
                 Back to login
               </Link>
             </div>
-          </div>
-        </div>
+          
+        
       </div>
-      <Footer />
-    </>
+     </div>
+      <div className="absolute top-1 left-1 md:top-2 md:left-2 z-20 w-full bg-white/60 h-full"></div>
+      <div className="absolute top-2 left-2 md:top-4 md:left-4 z-10 w-full bg-white/30 h-full"></div>
+     </div>
+    </div>
   );
 }

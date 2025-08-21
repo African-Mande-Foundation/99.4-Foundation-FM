@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: data.error?.message || 'Failed to send reset email.' }, { status: strapiRes.status });
     }
 
-    return NextResponse.json({ message: 'If your email is registered, you will receive a password reset link.' }, { status: 200 });
+    return NextResponse.json({ message: 'Only registered emails, will receive a password reset link. If you have not received the password reset link in your inbox, check your spam folder.' }, { status: 200 });
   } catch (error) {
     console.error('Forgot password API error:', error);
     return NextResponse.json({ message: 'Internal server error.' }, { status: 500 });

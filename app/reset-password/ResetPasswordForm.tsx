@@ -4,10 +4,12 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Navbar from '../ui/Navbar';
 import Link from 'next/link';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function ResetPasswordPage() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -67,55 +69,76 @@ export default function ResetPasswordPage() {
     };
 
     return (
-        <>
+        <div className="w-screen h-screen">
             <Navbar />
-            <div className="bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-                <div className="sm:mx-auto sm:w-full sm:max-w-md">
-                    <h2 className="text-center text-3xl font-extrabold text-gray-900">
+            <div className="relative flex flex-col items-center w-95/100 h-85/100 justify-center">
+                <div className="absolute top-0 left-0 z-30 p-4 w-full bg-white h-full items-center justify-center flex">
+                    <div className='w-[280px] md:w-[400px]'>
+                <div>
+                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
                         Reset Your Password
                     </h2>
                     <p className="mt-2 text-center text-sm text-gray-600">
                         Enter your new password below.
                     </p>
                 </div>
-                <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                    <div className="bg-white py-8 px-4 shadow-lg sm:px-10">
-                        <form className="space-y-6" onSubmit={handleSubmit}>
+                        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                             {message && <p className="text-green-600 text-center text-sm">{message}</p>}
                             {error && <p className="text-red-500 text-center text-sm">{error}</p>}
-                            <div>
+                            <div className="flex flex-col mb-4 border-2 rounded-md border-gray-300">
                                 <label htmlFor="password" className="sr-only">New Password</label>
-                                <input
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    autoComplete="new-password"
-                                    required
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm"
-                                    placeholder="New Password"
-                                />
+                                <div className='w-full flex 
+                                
+                                items-center justify-center   focus:ring-[#03A0B4] focus:border-[#03A0B4] focus:z-10 '>
+                                    <input
+                                        id="password"
+                                        name="password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        required
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        className="relative block w-80/100 md:w-90/100 p-2 placeholder-gray-500 text-gray-900  focus:outline-none bg-[#F5F5F5] focus:ring-[#03A0B4] focus:border-[#03A0B4] border-gray-300 focus:z-10  sm:text-sm border-1 rounded-l-sm border-r-2 "
+                                        placeholder="New Password"
+                                    />
+                                    <div className='w-20/100 md:w-10/100 flex items-center justify-center p-2
+                                 bg-[#F5F5F5]focus:outline-none focus:ring-[#03A0B4] focus:border-[#03A0B4] focus:z-10 border-gray-300 rounded-r-md text-gray-900 '>
+                                        <button type="button" className='cursor-pointer' onClick={() => setShowPassword((prev) => !prev)} tabIndex={-1}>
+                                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
+                                    </div>
+
+
+                                </div>
                             </div>
-                            <div>
-                                <label htmlFor="confirm-password" className="sr-only">Confirm New Password</label>
-                                <input
-                                    id="confirm-password"
-                                    name="confirm-password"
-                                    type="password"
-                                    autoComplete="new-password"
-                                    required
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    className="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm"
-                                    placeholder="Confirm New Password"
-                                />
+                            <div className="flex flex-col mb-4 border-2 rounded-md border-gray-300">
+                                <div className='w-full flex 
+                                
+                                items-center justify-center   focus:ring-[#03A0B4] focus:border-[#03A0B4] focus:z-10 '>
+                                    <input
+                                        id="password"
+                                        name="password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        required
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        className="relative block w-80/100 md:w-90/100 p-2 placeholder-gray-500 text-gray-900  focus:outline-none bg-[#F5F5F5] focus:ring-[#03A0B4] focus:border-[#03A0B4] border-gray-300 focus:z-10  sm:text-sm border-1 rounded-l-sm border-r-2 "
+                                        placeholder="Confirm Password"
+                                    />
+                                    <div className='w-20/100 md:w-10/100 flex items-center justify-center p-2
+                                 bg-[#F5F5F5]focus:outline-none focus:ring-[#03A0B4] focus:border-[#03A0B4] focus:z-10 border-gray-300 rounded-r-md text-gray-900 '>
+                                        <button type="button" className='cursor-pointer' onClick={() => setShowPassword((prev) => !prev)} tabIndex={-1}>
+                                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
+                                    </div>
+
+
+                                </div>
                             </div>
                             <div>
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:opacity-50 transition ease-in-out duration-150"
+                                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#03A0B4] hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:opacity-50 cursor-pointer transition ease-in-out duration-150"
                                 >
                                     {isLoading ? 'Resetting...' : 'Reset Password'}
                                 </button>
@@ -126,10 +149,13 @@ export default function ResetPasswordPage() {
                                 Back to login
                             </Link>
                         </div>
-                    </div>
+                    
                 </div>
             </div>
-            
-        </>
+
+            <div className="absolute top-1 left-1 md:top-2 md:left-2 z-20 w-full bg-white/60 h-full"></div>
+                <div className="absolute top-2 left-2 md:top-4 md:left-4 z-10 w-full bg-white/30 h-full"></div>
+            </div>
+        </div>
     );
 }
