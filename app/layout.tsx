@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Merriweather} from "next/font/google";
+import { Merriweather } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
+import AppLoader from "./ui/AppLoader";
 
 const merriweather = Merriweather({
   subsets: ['latin'],
-  weight: ['300', '400', '700', '900'], // use what you need
+  weight: ['300', '400', '700', '900'],
   style: ['normal', 'italic'],
   display: 'swap',
 });
@@ -22,10 +23,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="bg-white">
-      <body
-        className={`${merriweather.className} antialiased`}
-      >
-        <Providers>{children}</Providers>
+      <body className={`${merriweather.className} antialiased`}>
+        <Providers>
+          <AppLoader>{children}</AppLoader>
+        </Providers>
       </body>
     </html>
   );

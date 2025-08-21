@@ -139,7 +139,7 @@ export default function NavbarClient() {
                                 onClick={() => navigateToSection('podcasts')}
                                 className={`block w-full text-left px-4 py-2 transition-colors ${activeSection === 'podcasts'
                                     ? 'bg-[#03A0B4] text-white'
-                                    : 'hover:bg-gray-800 hover:text-[#03A0B4]'
+                                    : 'hover:bg-gray-800 hover:text-[#03A0B4]' 
                                     }`}
                             >
                                 Podcasts
