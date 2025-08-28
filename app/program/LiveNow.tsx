@@ -148,10 +148,10 @@ export default function LiveNow() {
     <div className="p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
       <div>
         <h3 className="text-xl text-[#03A0B4] font-semibold">
-          Want this embedded on your homepage?
+          Want this program on your calendar?
         </h3>
         <p className="text-gray-500">
-          Use this Programme component as a section, or split the “On Air Now” banner for a hero area.
+          Click on the &quot;Get iCal feed&quot; button to download our full program for the whole week.
         </p>
       </div>
       <div className="flex gap-3">
