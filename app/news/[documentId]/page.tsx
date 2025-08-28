@@ -53,24 +53,28 @@ export default function ArticlePage() {
         <div className="flex-grow flex items-center justify-center">
           <LoadingBar className="w-30 h-30" />
         </div>
-    
       </div>
-
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <p className="text-red-500">Error: {error}</p>
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        <div className="flex-grow flex items-center justify-center">
+          <p className="text-red-500">Error: {error}</p>
+        </div>
       </div>
     );
   }
 
   if (!article) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <p className="text-gray-800">Article not found.</p>
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        <div className="flex-grow flex items-center justify-center">
+          <p className="text-gray-800">Article not found.</p>
+        </div>
       </div>
     );
   }

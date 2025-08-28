@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import Navbar from "@/app/ui/Navbar";
-import Footer from "@/app/ui/Footer";
 import ArticleGrid from "@/app/news/components/ArticleGrid";
 import LoadingBar from "@/app/ui/LoadingBar";
 import { Article } from "@/app/lib/types";
@@ -53,7 +52,6 @@ const CategoryPage = () => {
       <>
         <Navbar />
         <LoadingBar />
-        <Footer />
       </>
     );
   }
@@ -101,7 +99,6 @@ const CategoryPage = () => {
           </>
         )}
       </div>
-      <Footer />
     </div>
   );
 };
