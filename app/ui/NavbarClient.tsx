@@ -37,7 +37,7 @@ export default function NavbarClient() {
     // Handle scroll to update active section
     useEffect(() => {
         const handleScroll = () => {
-            const sections = ['home', 'podcasts', 'collection', 'about', 'programs', 'testimonials',];
+            const sections = ['home', 'podcasts', 'collection', 'about', 'programs', 'testimonials','contact'];
             const scrollPosition = window.scrollY + 100;
 
             for (const section of sections) {

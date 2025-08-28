@@ -3,6 +3,7 @@ import { Merriweather } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
 import AppLoader from "./ui/AppLoader";
+import Script from "next/script";
 
 const merriweather = Merriweather({
   subsets: ['latin'],
@@ -23,6 +24,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="bg-white">
+       <head>
+        <Script src="https://js.paystack.co/v1/inline.js" strategy="beforeInteractive" />
+      </head>
       <body className={`${merriweather.className} antialiased`}>
         <Providers>
           <AppLoader>{children}</AppLoader>

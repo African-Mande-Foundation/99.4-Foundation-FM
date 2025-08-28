@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Navbar from '../ui/Navbar';
-import Footer from '../ui/Footer';
 import Link from 'next/link';
 
 export default function ForgotPasswordPage() {
