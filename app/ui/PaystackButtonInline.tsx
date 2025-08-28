@@ -35,10 +35,10 @@ export default function PaystackButtonInline({
   currency = "USD",
   onVerified,
 }: Props) {
-  const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY!;
+  const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC!;
 
   const payWithPaystack = () => {
-    // guard: check if Paystack script loaded
+   
     if (typeof window === "undefined" || !window.PaystackPop) {
       alert("Payment library not loaded yet. Please try again.");
       return;

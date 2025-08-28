@@ -1,4 +1,3 @@
-// app/api/verify-payment/route.ts
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -8,7 +7,7 @@ export async function POST(req: Request) {
     const r = await fetch(`https://api.paystack.co/transaction/verify/${reference}`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY!}`, // SECRET key (server only)
+        Authorization: `Bearer ${process.env.PAYSTACK_SECRET!}`, 
         "Content-Type": "application/json",
       },
       cache: "no-store",
@@ -16,12 +15,10 @@ export async function POST(req: Request) {
 
     const data = await r.json();
 
-    // data.status === true AND data.data.status === "success"
     if (data?.status && data?.data?.status === "success") {
       const amount = (data.data.amount ?? 0) / 100;
       const currency = data.data.currency ?? "USD";
 
-      // TODO: optionally persist to your DB here
 
       return NextResponse.json({
         status: "success",

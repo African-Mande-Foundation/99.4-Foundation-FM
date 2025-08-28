@@ -1,4 +1,3 @@
-// app/donate/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -55,9 +54,9 @@ export default function DonatePage() {
                     amount={amt}
                     email={email}
                     label={`Donate $${amt}`}
-                    currency="USD" // change to "NGN" if your account is Naira-based
+                    currency="USD"
                     onVerified={({ reference }) => {
-                      // Optional: route to a thank-you page or show a toast
+                      
                       console.log("Verified ref:", reference);
                     }}
                   />)
